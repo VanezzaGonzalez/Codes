@@ -1,0 +1,28 @@
+import pandas as pd
+
+# Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoOperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Operaciones_Ueno_part2.csv', sep=';')
+
+# Convertir la columna 'Id Region' a tipo cadena (string)
+df1['Actividad Origen'] = df1['Actividad Origen'].astype(str)
+df2['Actividad Origen'] = df2['Actividad Origen'].astype(str)
+
+# Limpiar espacios en las columnas 'Id Region'
+df1['Actividad Origen'] = df1['Actividad Origen'].str.strip()
+df2['Actividad Origen'] = df2['Actividad Origen'].str.strip()
+
+# Encuentra las filas donde 'Id Region' es diferente basado en 'Llave Concatenada'
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+diferencias_actividad_origen = merged[merged['Actividad Origen_df1'] != merged['Actividad Origen_df2']]
+
+# Filtrar las filas donde ambos 'Id Region' son NaN
+mask_both_nan = (diferencias_actividad_origen['Actividad Origen_df1'].isna()) & (diferencias_actividad_origen['Actividad Origen_df2'].isna())
+diferencias_actividad_origen = diferencias_actividad_origen[~mask_both_nan]
+
+# Imprimir las filas donde 'Id Region' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_actividad_origen)
+
+# Exportar a CSV
+diferencias_actividad_origen.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Diferencias_actividad_origen.csv', index=False, sep=';')
