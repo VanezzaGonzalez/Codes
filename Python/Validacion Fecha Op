@@ -1,0 +1,20 @@
+import pandas as pd
+
+# Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoOperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Operaciones_Ueno_part2.csv', sep=';')
+
+# Encuentra las filas donde 'Fecha Operacion' es diferente basado en 'Llave Concatenada'
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+diferencias_fecha_op = merged[merged['Fecha Operacion_df1'] != merged['Fecha Operacion_df2']]
+
+# Filtrar las filas donde ambos 'Fecha Operacion' son NaN
+mask_both_nan = (diferencias_fecha_op['Fecha Operacion_df1'].isna()) & (diferencias_fecha_op['Fecha Operacion_df2'].isna())
+diferencias_fecha_op = diferencias_fecha_op[~mask_both_nan]
+
+# Imprimir las filas donde 'Fecha Operacion' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_fecha_op)
+
+# Exportar resultados a CSV
+diferencias_fecha_op.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Diferencias_fecha_op.csv', index=False, sep=';')
