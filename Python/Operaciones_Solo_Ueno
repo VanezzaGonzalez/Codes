@@ -1,0 +1,12 @@
+import pandas as pd
+
+df_left = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoOperacionesModifv2_part2.csv', sep=';')
+df_right = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Operaciones_Ueno_part2.csv', sep=';')
+
+merged = df_left.merge(df_right, on='Llave Concatenada', how='left', suffixes=('_modif', '_original'), indicator=True)
+only_in_left = merged[merged['_merge'] == 'left_only']
+
+pd.set_option('display.max_columns', None)
+print(only_in_left)
+
+only_in_left.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validaciones_Solo_UENO.csv', index=False, sep=';')
