@@ -1,0 +1,19 @@
+import pandas as pd
+
+df_BI = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\Vinculos_Solar_BI.csv', sep=';')
+df_Ueno = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\SolarVinculosModif.csv', sep=';')
+
+# Encuentra las filas donde 'Desvinculado' es diferente basado en 'Llave Concatenada'
+merged = df_BI.merge(df_Ueno, on='Llave Concatenada', suffixes=('_BI', '_Ueno'))
+diferencias_nombre = merged[merged['Nombre_BI'] != merged['Nombre_Ueno']]
+
+# Filtrar las filas donde ambos 'Fecha Nacimiento' son NaN
+mask_both_nan = (diferencias_nombre['Nombre_BI'].isna()) & (diferencias_nombre['Nombre_Ueno'].isna())
+diferencias_nombre = diferencias_nombre[~mask_both_nan]
+
+# Imprimir las filas donde 'Fecha Nacimiento' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_nombre)
+
+# Exportar resultados a CSV
+diferencias_nombre.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\Diferencias_nombre_vinculos.csv', index=False, sep=';')
