@@ -1,0 +1,25 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+ruta_archivo = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\Solar_Vinculos.csv'
+
+# Leer el archivo CSV excluyendo las columnas 'Tipo Formulario' y 'Numero Registro'
+columnas_a_excluir = ['Tipo Formulario', 'Numero Registro']
+df = pd.read_csv(ruta_archivo, sep=';', dtype=str, index_col=False, usecols=lambda col: col not in columnas_a_excluir, encoding='ANSI')
+
+# Eliminar los ceros al principio de los valores en la columna 'Codigo Tipo Vinculo'
+df['Codigo Tipo Vinculo'] = df['Codigo Tipo Vinculo'].str.lstrip('0')
+
+# Crear la nueva columna concatenando los valores de las columnas
+df['Llave Concatenada'] = df.apply(lambda row: f"{str(row['Codigo Oficina']).replace(' ', '')}{row['Codigo Tipo Operacion']}{str(row['Numero Operacion']).replace(' ', '')}{str(row['Codigo Moneda']).replace(' ', '')}{str(row['Numero Documento']).replace(' ', '')}{row['Codigo Tipo Vinculo']}", axis=1)
+
+# Eliminar espacios en blanco de las celdas de tipo cadena en todo el DataFrame
+df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+# Mostrar las primeras filas del DataFrame con la nueva columna
+pd.set_option('display.max_columns', None)
+print(df.head())
+print(df.shape)
+
+# Exportar el DataFrame a un archivo CSV
+df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\SolarVinculosModif.csv', index=False, sep=';')
