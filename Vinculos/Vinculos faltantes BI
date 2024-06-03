@@ -1,0 +1,12 @@
+import pandas as pd
+
+df_left = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\Vinculos_Solar_BI.csv', sep=';')
+df_right = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\SolarVinculosModif.csv', sep=';')
+
+merged = df_left.merge(df_right, on='Llave Concatenada', how='left', suffixes=('_modif', '_original'), indicator=True)
+only_in_left = merged[merged['_merge'] == 'left_only']
+
+pd.set_option('display.max_columns', None)
+print(only_in_left)
+
+only_in_left.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\10 tanda\Vinculos_Solo_BI.csv', index=False, sep=';')
