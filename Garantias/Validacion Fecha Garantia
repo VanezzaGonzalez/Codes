@@ -1,0 +1,53 @@
+import pandas as pd
+
+df_base = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\garantias_vigentes.csv', sep=';', dtype={'Codigo Garantia_garantias_rcf': str, 'Moneda Garantia': str, 'Tipo Garantia_garantias_rcf': str, 'Monto Garantia_garantias_rcf': str, 'Fecha Tasacion_garantias_rcf': str, 'Fecha Seguro': str})
+df_ueno = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\SolarGarantias.csv', sep=';', dtype={'Codigo Garantia': str, 'Codigo Moneda': str, 'Tipo Garantia': str, 'Fecha Tasacion': str, 'Fecha vencimiento tasacion': str, 'Numero de registro de garantia': str})
+
+df_base = df_base.astype(str)
+df_ueno = df_ueno.astype(str)
+
+# Filtrar columnas en df_base
+df_base = df_base.filter(['Garantia Sucursal Codigo', 'Codigo Garantia_garantias_rcf', 'Tipo Garantia_garantias_rcf', 'Numero Registro Publico_garantias_rcf', 'Rango Garantia_garantias_rcf', 'Fecha Garantia_garantias_rcf', 'Fecha Vencimiento Garantia_garantias_rcf', 'Monto Garantia_garantias_rcf', 'Fecha Tasacion_garantias_rcf', 'Fecha Vencimiento Tasacion_garantias_rcf', 'Monto Tasacion Asegurable_garantias_rcf', 'Monto Tasacion No Asegurable_garantias_rcf', 'Fecha Seguro_garantias_rcf', 'Fecha Vencimiento Seguro_garantias_rcf', 'Moneda Seguro_garantias_rcf', 'Monto Asegurado_garantias_rcf', 'Garantia Especifica_garantias_rcf', 'Garantia Perfeccionada_garantias_rcf',  'Moneda Garantia'])
+
+#Cambiar nombre a columnas de df_ueno
+
+nombres = {
+    'Codigo Moneda' : 'Moneda Garantia',
+    'Numero de registro de garantia' : 'Numero Registro Publico',
+    'Rango de garantia' : 'Rango Garantia',
+    'Fecha garantia' : 'Fecha Garantia',
+    'Fecha vencimiento garantia' : 'Fecha Vencimiento Garantia',
+    'Monto garantia' : 'Monto Garantia',
+    'Fecha tasacion' : 'Fecha Tasacion',
+    'Fecha vencimiento tasacion' : 'Fecha Vencimiento Tasacion',
+    'Codigo Moneda Seguro' : 'Moneda Seguro',
+    'Monto tasacion (asegurable)' : 'Monto Tasacion Asegurable',
+    'Monto tasacion (no asegurable)' : 'Monto Tasacion No Asegurable',
+    'Garantia especifica' : 'Garantia Especifica',
+    'Garantia perfeccionada' : 'Garantia Perfeccionada'
+}
+
+df_ueno.rename(columns=nombres, inplace=True)
+
+# Crear la columna 'Clave' en ambos DataFrames
+df_base['Clave'] = df_base['Garantia Sucursal Codigo'] + df_base['Codigo Garantia_garantias_rcf'] + df_base['Moneda Garantia'] + df_base['Tipo Garantia_garantias_rcf']
+df_ueno['Clave'] = df_ueno['Sucursal'] + df_ueno['Codigo Garantia'] + df_ueno['Moneda Garantia'] + df_ueno['Tipo Garantia']
+
+# Eliminar duplicados en df_base
+df_base = df_base.drop_duplicates(subset='Clave')
+
+# Eliminar sufijo '_garantias_rcf' de las columnas en df_base
+df_base.columns = [col.replace('_garantias_rcf', '') for col in df_base.columns]
+
+# Realizar el merge de los DataFrames
+merged = df_base.merge(df_ueno, on='Clave', suffixes=('_df_base', '_df_ueno'))
+
+columnas_mostrar = ['Fecha Garantia_df_base', 'Clave', 'Fecha Garantia_df_ueno']
+
+diferencias_fecha_gtia = merged[merged['Fecha Garantia_df_base'] != merged['Fecha Garantia_df_ueno']][columnas_mostrar]
+print("Diferencias Fecha Garantia:")
+pd.set_option('display.max_columns', None)
+print(diferencias_fecha_gtia)
+
+# Exportar el DataFrame a un archivo CSV
+diferencias_fecha_gtia.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\diferencias_fecha_gtia.csv', index=False, sep=';')
