@@ -1,0 +1,23 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+ruta_archivo = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Ueno_OpeGaran.csv'
+
+# Leer el archivo CSV excluyendo las columnas 'Tipo Formulario' y 'Nro Registro'
+columnas_a_excluir = ['Tipo Formulario', 'Nro Registro']
+df = pd.read_csv(ruta_archivo, sep=';', dtype=str, index_col=False, usecols=lambda col: col not in columnas_a_excluir)
+
+
+# Crear la nueva columna concatenando los valores de las columnas
+df['Llave Concatenada'] = df.apply(lambda row: f"{row['Sucursal'].replace(' ', '')}{row['Tipo Operacion']}{row['Nro. Operacion'].replace(' ', '')}{row['Codigo Moneda']}", axis=1)
+
+# Eliminar espacios en blanco de las celdas de tipo cadena en todo el DataFrame
+df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+# Mostrar las primeras filas del DataFrame con la nueva columna
+pd.set_option('display.max_columns', None)
+print(df.head())
+print(df.shape)
+
+# Exportar el DataFrame a un archivo CSV
+df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\UenoOpeGaranModif.csv', index=False, sep=';')
