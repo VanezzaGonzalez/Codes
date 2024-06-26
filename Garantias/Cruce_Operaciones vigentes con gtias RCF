@@ -1,0 +1,22 @@
+import pandas as pd
+
+df_operaciones = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\comunes_BI_OpegaranRCF.csv', sep=';', dtype={'Codigo Garantia': str, 'Garantia Moneda': str, 'Tipo Garantia': str, 'Garantia Sucursal Codigo': str})
+df_garantias_rcf = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\UenoGarantiasModif.csv', sep=';', dtype={'Codigo Garantia': str, 'Moneda Garantia': str, 'Tipo Garantia': str})
+
+df_operaciones = df_operaciones.astype(str)
+df_garantias_rcf = df_garantias_rcf.astype(str)
+
+# Crear la columna 'Llave Concatenada' en ambos DataFrames
+df_operaciones['Llave Concatenada'] = df_operaciones['Codigo Garantia'] + df_operaciones['Garantia Moneda'] + df_operaciones['Tipo Garantia']
+df_garantias_rcf['Llave Concatenada'] = df_garantias_rcf['Codigo Garantia'] + df_garantias_rcf['Moneda Garantia'] + df_garantias_rcf['Tipo Garantia']
+
+# Encontrar números de operación comunes
+common_operations = pd.merge(df_operaciones, df_garantias_rcf, how='inner', on='Llave Concatenada', suffixes=('_Opegaran', '_garantias_rcf'))
+
+# Mostrar las filas comunes
+print("garantias vigentes:")
+pd.set_option('display.max_columns', None)
+print(common_operations)
+
+# Exportar el DataFrame a un archivo CSV
+common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\garantias_vigentes.csv', index=False, sep=';')
