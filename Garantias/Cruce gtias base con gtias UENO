@@ -1,0 +1,56 @@
+import pandas as pd
+
+df_base = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\garantias_vigentes.csv', sep=';', dtype={'Codigo Garantia_garantias_rcf': str, 'Moneda Gartantia': str, 'Tipo Garantia_garantias_rcf': str, 'Garantia Sucursal Codigo': str})
+df_ueno = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\SolarGarantias.csv', sep=';', dtype={'Codigo Garantia': str, 'Codigo Moneda': str, 'Tipo Garantia': str, 'Sucursal': str})
+
+# Convertir la columna 'Garantia Sucursal Codigo' a cadena
+df_base['Garantia Sucursal Codigo'] = df_base['Garantia Sucursal Codigo'].astype(str)
+
+# Filtrar columnas en df_base
+df_base = df_base.filter(['Codigo Garantia_garantias_rcf', 'Moneda Garantia', 'Tipo Garantia_garantias_rcf', 'Garantia Sucursal Codigo'])
+
+# Filtrar columnas en df_ueno
+df_ueno = df_ueno.filter(['Codigo Garantia', 'Codigo Moneda', 'Tipo Garantia', 'Sucursal'])
+
+df_base = df_base.astype(str)
+df_ueno = df_ueno.astype(str)
+
+# Crear la columna 'Clave' en ambos DataFrames
+df_base['Clave'] = df_base['Codigo Garantia_garantias_rcf'] + df_base['Moneda Garantia'] + df_base['Tipo Garantia_garantias_rcf'] + df_base['Garantia Sucursal Codigo']
+df_ueno['Clave'] = df_ueno['Codigo Garantia'] + df_ueno['Codigo Moneda'] + df_ueno['Tipo Garantia'] + df_ueno['Sucursal']
+
+# Eliminar duplicados en df_base
+df_base = df_base.drop_duplicates(subset='Clave')
+
+# Mostrar DataFrame df_base con la nueva columna
+print("DataFrame df_base con columna 'Clave':")
+print(df_base)
+
+# Mostrar DataFrame df_ueno con la nueva columna
+print("\nDataFrame df_ueno con columna 'Clave':")
+print(df_ueno)
+
+# Encontrar números de operación comunes
+common_operations = pd.merge(df_base, df_ueno, how='inner', on='Clave', suffixes=('_base', '_ueno'))
+
+# Mostrar las filas comunes
+print("Operaciones comunes:")
+print(common_operations)
+
+# Encontrar números de operación únicos en df_base
+unique_in_base = df_base[~df_base['Clave'].isin(df_ueno['Clave'])]
+
+# Mostrar las filas únicas en df_base
+print("Operaciones únicas en df_base:")
+print(unique_in_base)
+
+# Encontrar números de operación únicos en df_ueno
+unique_in_ueno = df_ueno[~df_ueno['Clave'].isin(df_base['Clave'])]
+
+# Mostrar las filas únicas en df_ueno
+print("Operaciones únicas en df_ueno:")
+print(unique_in_ueno)
+
+common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Zeta_garantias_comunes.csv', index=False, sep=';')
+unique_in_ueno.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Zeta_garantias_unicas_en_ueno.csv', index=False, sep=';')
+unique_in_base.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Zeta_garantias_unicas_en_base.csv', index=False, sep=';')
