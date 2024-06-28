@@ -1,0 +1,124 @@
+import csv
+import pandas as pd
+
+# Ruta del archivo de texto y el archivo CSV de salida
+archivo_txt = r"C:\Users\fgonzalez\Downloads\894443_CRC03-1041-20240531.txt.gz"
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos2PRUEBA.csv'
+
+# Función para insertar punto y coma en posiciones específicas en una cadena
+def insertar_punto_y_coma(cadena, posiciones):
+    lista_cadena = list(cadena)
+    for pos in posiciones:
+        lista_cadena.insert(pos, ';')
+    return ''.join(lista_cadena)
+
+# Lista con los nombres de las columnas
+nombres_columnas = [
+    'Tipo Formulario', 'Codigo Oficina', 'Tipo Operacion', 'Nro. Operacion', 'Codigo Moneda', 'Fecha Corte',
+    'Fecha Vencimiento Prox. Cuota', 'Fecha Vencimiento Primera Cuota Impaga', 'Días Atraso', 'Cuenta Contable Saldo Capital', 'Saldo Capital',
+    'Cuota Caída', 'Cuenta Interes a Devengar', 'Interes a Devengar', 'Cuenta IDNC', 'IDNC',
+    'Cuenta IDC', 'IDC', 'Cuenta Interes en Suspenso', 'Interes en Suspenso', 'Cuenta Contingencia', 'Contingencia', 'Tasa Efectiva', 'Cuenta Previsiones', 'Prevision', 'Cuotas canceladas', 'Clasificacion', 'Numero de Registro', 'Cuenta', 'SubCuenta', 'Cuenta IDNC Extraida', 'SubCuenta IDNC Extraida'
+]
+
+# Leer el archivo de texto y conviértelo a un archivo CSV con punto y coma en posiciones específicas
+with open(archivo_txt, 'r', encoding='latin1') as txtfile, open(archivo_csv, 'w', newline='', encoding='latin1') as csvfile:
+    writer = csv.writer(csvfile, delimiter=';')
+    next(txtfile) # Saltar la primera línea del archivo de texto
+    writer.writerow(nombres_columnas) # Escribir los nombres de las columnas en el archivo CSV
+
+    for linea in txtfile:
+        posiciones = [3, 8, 12, 73, 77, 86, 95, 104, 110, 129, 150, 171, 190, 211, 230, 251, 270, 291, 310, 331, 350, 371, 377, 396, 417, 421, 424]
+        nueva_linea = insertar_punto_y_coma(linea.strip(), posiciones)
+        lista_datos = nueva_linea.split(';')
+
+        cuenta_contable_saldo_capital = lista_datos[9]  # Índice de la columna 'Cuenta Contable Saldo Capital'
+        cuenta = cuenta_contable_saldo_capital[5:8]  # Extraer 'Cuenta'
+        subcuenta = cuenta_contable_saldo_capital[9:12]  # Extraer 'SubCuenta'
+
+        cuenta_idnc = lista_datos[14]  # Índice de la columna 'Cuenta IDNC'
+        cuenta_idnc_extraida = cuenta_idnc[5:8]  # Extraer 'Cuenta IDNC'
+        subcuenta_idnc_extraida = cuenta_idnc[9:12]  # Extraer 'SubCuenta IDNC'
+
+        lista_datos.append(cuenta)
+        lista_datos.append(subcuenta)
+        lista_datos.append(cuenta_idnc_extraida)
+        lista_datos.append(subcuenta_idnc_extraida)
+        writer.writerow(lista_datos)
+
+# Leer el archivo CSV generado en un DataFrame de pandas
+df = pd.read_csv(archivo_csv, delimiter=';', encoding='latin1')
+
+# Convertir la columna 'Saldo Capital' e 'IDNC' a numérica
+df['Saldo Capital'] = pd.to_numeric(df['Saldo Capital'], errors='coerce')
+df['IDNC'] = pd.to_numeric(df['IDNC'], errors='coerce')
+
+# Aplicar la función de concatenación a lo largo de las filas del DataFrame
+df['Cuenta + SubCuenta'] = df['Cuenta'].astype(str) + df['SubCuenta'].astype(str)
+
+# Convertir las columnas de IDNC extraídas a cadenas
+df['Cuenta IDNC Extraida'] = df['Cuenta IDNC Extraida'].astype(str)
+df['SubCuenta IDNC Extraida'] = df['SubCuenta IDNC Extraida'].astype(str)
+
+# Concatenar 'Cuenta IDNC Extraida' y 'SubCuenta IDNC Extraida'
+df['Cuenta + SubCuenta IDNC'] = df['Cuenta IDNC Extraida'] + df['SubCuenta IDNC Extraida']
+
+# Seleccionar solo las columnas requeridas
+columnas_seleccionadas = [
+    'Cuenta', 'SubCuenta', 'Cuenta + SubCuenta', 'Cuenta IDNC Extraida', 'SubCuenta IDNC Extraida',
+    'Cuenta + SubCuenta IDNC', 'Saldo Capital', 'IDNC'
+]
+
+# Crear un nuevo DataFrame con las columnas seleccionadas
+df_nuevo = df[columnas_seleccionadas]
+pd.set_option('display.max_columns', None)
+print(df_nuevo)
+df_nuevo.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ESTE SI.csv', index=False, sep=';')
+
+# Lista de cuentas para el primer filtro
+cuentas_primer_filtro = [417, 419, 433, 141, 169, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 195, 197, 199,
+                         201, 203, 205, 207, 209, 211, 213, 215, 217, 219, 221, 223, 251, 265, 267, 269, 271, 273, 275, 351,
+                         369, 371, 373, 375, 377, 381, 383, 385, 387, 397, 405, 143, 441, 443, 449]
+
+# Lista de Cuenta + SubCuenta para el segundo filtro
+cuentas_subcuenta_segundo_filtro = ['13312', '13712', '13112', '13912', '13524', '13526', '13512', '13724', '13726',
+                                    '13924', '13324', '13326', '13124', '13926', '13126']
+
+# Aplicar el primer filtro
+filtro_primer_filtro = df_nuevo['Cuenta'].astype(int).isin(cuentas_primer_filtro)
+df_filtrado_primer_filtro = df_nuevo[filtro_primer_filtro]
+
+# Aplicar el segundo filtro
+filtro_segundo_filtro = df_nuevo['Cuenta + SubCuenta'].isin(cuentas_subcuenta_segundo_filtro)
+df_filtrado_segundo_filtro = df_nuevo[filtro_segundo_filtro]
+
+# Sumar según las condiciones especificadas
+suma_primer_filtro = df_filtrado_primer_filtro[['Saldo Capital', 'IDNC']].sum().sum()
+suma_segundo_filtro = df_filtrado_segundo_filtro['Saldo Capital'].sum()
+
+# Crear el DataFrame resultante
+df_resultado = pd.DataFrame({
+    'Cartera Créditos': ['Suma de Saldo Capital e IDNC', 'Suma de Saldo Capital'],
+    'Suma de los valores': [suma_primer_filtro, suma_segundo_filtro]
+})
+
+# Mostrar el DataFrame resultante
+print("\nDataFrame Resultante:")
+print(df_resultado)
+
+# Concatenar los DataFrames filtrados
+df_detallado = pd.concat([df_filtrado_primer_filtro, df_filtrado_segundo_filtro])
+
+# Agrupar por 'Cuenta + SubCuenta' y 'Cuenta + SubCuenta IDNC' y sumar 'Saldo Capital' e 'IDNC'
+df_detallado = df_detallado.groupby(['Cuenta + SubCuenta', 'Cuenta + SubCuenta IDNC'], as_index=False).agg({
+    'Cuenta': 'first',
+    'SubCuenta': 'first',
+    'Cuenta IDNC Extraida': 'first',
+    'SubCuenta IDNC Extraida': 'first',
+    'Saldo Capital': 'sum',
+    'IDNC': 'sum'
+})
+
+# Mostrar el DataFrame resultante
+print("\nDataFrame Resultante Detallado:")
+print(df_detallado)
+df_detallado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\detallado.csv', index=False, sep=';')
