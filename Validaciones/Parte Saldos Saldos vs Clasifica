@@ -1,0 +1,63 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+archivo_csv = r"E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos2.csv"
+
+# Leer el archivo CSV en un DataFrame de pandas
+df = pd.read_csv(archivo_csv, delimiter=';', encoding='latin1')
+
+# Concatenar 'Cuenta' y 'SubCuenta' en una nueva columna
+df['Cuenta + SubCuenta'] = df['Cuenta'].astype(str) + df['SubCuenta'].astype(str)
+
+# Definir las cuentas y combinaciones para cada categoría
+deuda_cuentas = [
+    417, 419, 433, 141, 169, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 195, 197, 199,
+    201, 203, 205, 207, 209, 211, 213, 215, 217, 219, 221, 223, 251, 265, 267, 269, 271, 273, 275, 351,
+    369, 371, 373, 375, 377, 381, 383, 385, 387, 397, 405, 143, 441, 443, 449
+]
+deuda_subcuentas = [
+    '133012', '137012', '131012', '139012', '135024', '135026', '135012', '137024', '137026', '139024',
+    '133024', '133026', '131024', '139026', '131026'
+]
+incobrable_cuentas = [689]
+venta_cartera_cuentas = [697]
+fideicomiso_cuentas = [
+    945, 967, 947, 913, 938, 989, 907, 983, 991, 937, 941, 949, 951, 953, 955, 957, 959, 902, 904, 906,
+    910, 912, 914, 918, 920, 924, 926, 928, 930, 932, 940, 942, 944, 946, 948, 950, 954, 956, 958, 965,
+    969, 973, 975, 977, 985, 987, 993, 911, 935, 939, 908, 909, 916, 921, 915, 905, 979, 997, 919, 981,
+    952, 923, 931, 933, 943, 917, 927, 925, 901, 934, 960, 963, 961, 903, 971, 936, 962, 922, 929, 995
+]
+contingencia_columna = "Contingencia"
+
+# Calcular las sumas para cada categoría
+deuda_saldos = df[df['Cuenta'].isin(deuda_cuentas) | df['Cuenta + SubCuenta'].isin(deuda_subcuentas)][['Saldo Capital', 'IDNC']].sum()
+incobrable_saldos = df[df['Cuenta'].isin(incobrable_cuentas)][['Saldo Capital', 'IDNC']].sum()
+venta_cartera_saldos = df[df['Cuenta'].isin(venta_cartera_cuentas)][['Saldo Capital', 'IDNC']].sum()
+fideicomiso_saldos = df[df['Cuenta'].isin(fideicomiso_cuentas)][['Saldo Capital', 'IDNC']].sum()
+contingencia_saldos = df[contingencia_columna].sum()
+
+# Crear un DataFrame para almacenar los resultados
+resultados = pd.DataFrame({
+    'Categoria': ['Deuda Saldos', 'Incobrable Saldos', 'Venta de Cartera Saldos', 'Fideicomiso Saldos', 'Contingencia Saldos'],
+    'Saldo Capital': [
+        deuda_saldos['Saldo Capital'],
+        incobrable_saldos['Saldo Capital'],
+        venta_cartera_saldos['Saldo Capital'],
+        fideicomiso_saldos['Saldo Capital'],
+        contingencia_saldos
+    ],
+    'IDNC': [
+        deuda_saldos['IDNC'],
+        incobrable_saldos['IDNC'],
+        venta_cartera_saldos['IDNC'],
+        fideicomiso_saldos['IDNC'],
+        None  # 'None' for Contingencia Saldos since it doesn't have IDNC
+    ]
+})
+
+# Guardar el DataFrame de resultados en un nuevo archivo CSV
+archivo_csv_agrupado = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion_Saldos.csv'
+resultados.to_csv(archivo_csv_agrupado, index=False, sep=';')
+
+# Imprimir los resultados
+print(resultados)
