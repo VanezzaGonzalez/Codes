@@ -1,0 +1,128 @@
+import csv
+import pandas as pd
+import numpy as np
+
+# Ruta del archivo de texto y el archivo CSV de salida
+archivo_txt = r'C:\Users\fgonzalez\Downloads\ES-1004.DAT'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ES_Planinfo_prueba.csv'
+
+# Función para insertar punto y coma en posiciones específicas en una cadena
+def insertar_punto_y_coma(cadena, posiciones):
+    # Convertimos la cadena a una lista para manipularla más fácilmente
+    lista_cadena = list(cadena)
+
+    # Insertamos punto y coma en las posiciones especificadas
+    for pos in posiciones:
+        lista_cadena.insert(pos, ';')
+
+    # Convertimos la lista de nuevo a cadena
+    return ''.join(lista_cadena)
+
+# Lista con los nombres de las columnas
+nombres_columnas = [
+    'Tipo Formulario', 'Cuenta', 'Codigo Moneda', 'Monto', 'Numero Registro',
+]
+
+# Leer el archivo de texto y conviértelo a un archivo CSV con punto y coma en posiciones específicas
+with open(archivo_txt, 'r', encoding='ANSI') as txtfile, open(archivo_csv, 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=';')
+
+    # Saltar la primera línea del archivo de texto
+    next(txtfile)
+
+    # Escribir los nombres de las columnas en el archivo CSV
+    writer.writerow(nombres_columnas)
+
+    # Procesar las líneas del archivo de texto y escribir al archivo CSV
+    for linea in txtfile:
+        # Aquí especifica las posiciones en las que quieres colocar los punto y coma
+        posiciones = [3, 15, 20, 38]  # Ejemplo de posiciones
+
+        # Insertar los punto y comas en las posiciones deseadas
+        nueva_linea = insertar_punto_y_coma(linea.strip(), posiciones)
+
+        # Convertir la línea en una lista de strings
+        lista_datos = nueva_linea.split(';')
+
+        # Escribir la línea como una lista de strings
+        writer.writerow(lista_datos)
+
+
+# Ejemplo de lectura de datos desde un archivo CSV
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ES_Planinfo_prueba.csv'
+df = pd.read_csv(archivo_csv, delimiter=';', dtype={'Cuenta': str})  # Asegúrate del delimitador correcto
+
+# Crear las nuevas columnas
+df['Sector'] = df['Cuenta'].str[0:1]
+df['Capitulo'] = df['Cuenta'].str[1:2]
+df['Plazo'] = df['Cuenta'].str[2:3]
+df['Grupo'] = df['Cuenta'].str[3:4]
+df['Riesgo'] = df['Cuenta'].str[4:5]
+df['Cta'] = df['Cuenta'].str[5:8]
+df['Plazo2'] = df['Cuenta'].str[8:9]
+df['SubCta'] = df['Cuenta'].str[9:12]
+
+# Crear la columna adicional que concatena Cta y SubCta
+df['Cta_SubCta'] = df['Cta'] + df['SubCta']
+
+# Crear la columna adicional 'Cta. Modif'
+df['Cta. Modif'] = df['Sector'] + df['Capitulo'] + '0' + df['Grupo'] + '0' + df['Cta'] + '0' + df['SubCta']
+
+# Lista de Cuenta_SubCuenta que deben tener valores negativos en la columna Monto
+cuentas_negativas = [
+    '10194', '42192', '42193', '42393', '12192', '12193', '12792', '12793', '41192', '41193', '42392', '42393',
+    '16192','16193','16194','16195','44594','44595','44596','44597','16594','16595','16596','16597',
+    '16794','16795','16796','16797','17592','19392','19393','39992','39993','37592','22392','42592',
+    '42593','62592','22592','22593','22594','22595','22596','22792','22793','22794','22795','22992',
+    '22994','44794','44795','44796','44797','45194','45195','45196','45197','23192','23193','23194',
+    '23196','23392','23393','23592','23593','23792','23794','23796','25194','25196','42792','42793',
+    '26392','26393','27392','27394','42992','42993','27792','27793','27794','27795','27796','27797',
+    '27798','27799','27992','27993','27994','27995','27996','27997','27998','27999','28192','28194',
+    '28195','28196','28197','28392','28393','28394','28395','28396','28397','28398','28399','34792',
+    '34793','34794','34795','34796','34797','34798','34799','28592','28593','28594','28595','28596',
+    '28792','28793','28794','28795','28796','29192','29193','29194','29195','29196','29197','29198',
+    '34992','34993','34994','34995','34996','30392','30394','43192','43193','41592','41593','3178',
+    '31792','31793','31794','31795','31796','31798','31992','31996','32192','32194','32392','32592',
+    '32792','32992','33192','33392','33792','33794','33992','34191','34192','34194','34196','34198',
+    '34199','34392','13492','13493','15492','15493','22492','22493','22692','22693','23092','23292',
+    '23492','23493','26492','26493','60792','60793','60692','60693','90992','91192','91194','91196',
+    '92194','92195','92392','92394','92396','92398','92992','92994','94392','94394','94592','94792',
+    '96192','96194','90892','93494','93694'
+]
+
+# Aplicar la multiplicación condicionalmente
+df.loc[df['Cta_SubCta'].isin(cuentas_negativas), 'Monto'] *= -1
+
+# Dividir la columna 'Monto' por 100 y convertir a float
+df['Monto'] = df['Monto'] / 100.0
+
+# Crear la columna 'Moneda' basada en la condición de 'Codigo Moneda'
+df['Moneda'] = np.where(df['Codigo Moneda'] == 6200, 'EXTRANJERA',
+                        np.where(df['Codigo Moneda'] == 6900, 'NACIONAL', ''))
+
+# Mostrar el DataFrame completo después de la manipulación
+pd.set_option('display.max_columns', None)
+pd.set_option('display.float_format', '{:.2f}'.format)  # Formato de dos decimales para la salida
+print(df)
+
+df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\planinfomodic.csv', index=False, sep=';')
+
+# Leer el archivo CSV previamente modificado
+archivo_csv_modificado = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\planinfomodic.csv'
+df = pd.read_csv(archivo_csv_modificado, delimiter=';', index_col=False)
+
+# Filtrar las filas donde Moneda sea EXTRANJERA o NACIONAL
+df_filtered = df[df['Moneda'].isin(['EXTRANJERA', 'NACIONAL'])]
+
+# Seleccionar solo las columnas deseadas
+df_filtered = df_filtered[['Cta. Modif', 'Cta', 'SubCta', 'Cta_SubCta', 'Moneda', 'Monto']]
+
+# Agrupar por 'Cta. Modif' y 'Moneda' y sumar los montos
+df_grouped = df_filtered.groupby(['Cta. Modif', 'Moneda']).agg({'Monto': 'sum'}).reset_index()
+
+# Mostrar el DataFrame agrupado y sumado
+print(df_grouped)
+
+# Exportar el DataFrame agrupado a un archivo CSV
+archivo_csv_agrupado = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ES_Agrupado.csv'
+df_grouped.to_csv(archivo_csv_agrupado, index=False, sep=';')
