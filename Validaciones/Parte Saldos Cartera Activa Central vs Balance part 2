@@ -1,0 +1,60 @@
+import pandas as pd
+
+# Leer el archivo CSV
+df_nuevo = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ESTE SI.csv', sep=';')
+
+# Mostrar las primeras filas del DataFrame para verificar la carga correcta
+print("DataFrame original:")
+print(df_nuevo.head())
+
+# Limpiar los valores no válidos en 'Cuenta IDNC Extraida'
+df_nuevo['Cuenta IDNC Extraida'] = df_nuevo['Cuenta IDNC Extraida'].str.strip()
+
+# Verificar y convertir tipos de datos si es necesario
+df_nuevo['Cuenta IDNC Extraida'] = pd.to_numeric(df_nuevo['Cuenta IDNC Extraida'], errors='coerce').fillna(0).astype(int)
+df_nuevo['IDNC'] = pd.to_numeric(df_nuevo['IDNC'], errors='coerce').fillna(0).astype(float)
+
+# Lista de cuentas IDNC Extraida a excluir
+cuentas_excluidas = [161, 119, 415, 134, 224, 232, 226, 230, 264, 234, 154]
+
+# Verificar las filas que deben ser ajustadas y ajustar IDNC a 0
+print("\nAjustando IDNC a 0 donde 'Cuenta IDNC Extraida' está en 'cuentas_excluidas':")
+df_nuevo.loc[df_nuevo['Cuenta IDNC Extraida'].isin(cuentas_excluidas), 'IDNC'] = 0
+print(df_nuevo[df_nuevo['Cuenta IDNC Extraida'].isin(cuentas_excluidas)])
+
+# Lista de cuentas a incluir en el filtro por 'Cuenta'
+cuentas_incluir = [
+    417, 419, 433, 141, 169, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189,
+    191, 193, 195, 197, 199, 201, 203, 205, 207, 209, 211, 213, 215, 217, 219,
+    221, 223, 251, 265, 267, 269, 271, 273, 275, 351, 369, 371, 373, 375, 377,
+    381, 383, 385, 387, 397, 405, 143, 441, 443, 449
+]
+
+# Filtrar el DataFrame para incluir solo las filas con las cuentas especificadas
+df_filtrado = df_nuevo[df_nuevo['Cuenta'].isin(cuentas_incluir)]
+
+# Mostrar el DataFrame filtrado para verificación
+print("\nDataFrame después del filtro por 'Cuenta':")
+print(df_filtrado.head())
+
+# Sumar valores de las columnas deseadas
+columnas_sumar = ['Saldo Capital', 'IDNC']  # Reemplaza 'Otra_Columna' por el nombre de la columna que deseas sumar
+suma_valores = df_filtrado.groupby(['Cuenta', 'SubCuenta', 'Cuenta IDNC Extraida', 'SubCuenta IDNC Extraida'])[columnas_sumar].sum().reset_index()
+
+# Guardar el DataFrame filtrado a un nuevo archivo CSV
+suma_valores.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\df_filtrado_cuentas.csv', index=False, sep=';')
+
+# Lista de combinaciones de Cuenta y SubCuenta a incluir
+combinaciones_incluir = ['13312', '13712', '13112', '13912', '13524', '13526',
+                         '13512', '13724', '13726', '13924', '13324',
+                         '13326', '13124', '13926', '13126']
+
+# Filtrar el DataFrame para incluir solo las filas con las combinaciones especificadas
+df_filtrado = df_nuevo[df_nuevo.apply(lambda row: f"{row['Cuenta']}{row['SubCuenta']}", axis=1).isin(combinaciones_incluir)]
+
+# Mostrar el DataFrame filtrado para verificación
+print("\nDataFrame después del segundo filtro por combinación de 'Cuenta' y 'SubCuenta':")
+print(df_filtrado.head())
+
+# Guardar el DataFrame filtrado a un nuevo archivo CSV
+df_filtrado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\despues_segundo_filtro.csv', index=False, sep=';')
