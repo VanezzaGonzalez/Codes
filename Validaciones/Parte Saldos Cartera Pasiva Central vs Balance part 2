@@ -1,0 +1,59 @@
+import pandas as pd
+
+# Leer el archivo CSV
+df_nuevo = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ESTE SI.csv', sep=';')
+
+# Mostrar las primeras filas del DataFrame para verificar la carga correcta
+print("DataFrame original:")
+print(df_nuevo.head())
+
+# Limpiar los valores no válidos en 'Cuenta IDNC Extraida'
+df_nuevo['Cuenta IDNC Extraida'] = df_nuevo['Cuenta IDNC Extraida'].str.strip()
+
+# Verificar y convertir tipos de datos si es necesario
+df_nuevo['Cuenta IDNC Extraida'] = pd.to_numeric(df_nuevo['Cuenta IDNC Extraida'], errors='coerce').fillna(0).astype(int)
+df_nuevo['IDNC'] = pd.to_numeric(df_nuevo['IDNC'], errors='coerce').fillna(0).astype(float)
+
+# Primer filtro: Incluir valores de Saldos cuando Cuenta está en la lista
+cuentas_incluir_saldos = [
+    292, 102, 138, 236, 238, 196, 306, 156, 298, 152, 294, 284, 290,
+    136, 164, 112, 162, 166, 160, 110, 112, 108, 104, 280, 148, 214
+]
+
+df_filtrado_saldos = df_nuevo[df_nuevo['Cuenta'].isin(cuentas_incluir_saldos)]
+
+# Mostrar el DataFrame filtrado por 'Cuenta' para verificación
+print("\nDataFrame después del filtro por 'Cuenta':")
+print(df_filtrado_saldos.head())
+
+# Segundo filtro: Incluir valores de IDNC cuando Cuenta IDNC Extraida está en la lista
+cuentas_incluir_idnc = [134, 224, 226, 230, 232, 234]
+
+df_filtrado_idnc = df_nuevo[df_nuevo['Cuenta IDNC Extraida'].isin(cuentas_incluir_idnc)]
+
+# Mostrar el DataFrame filtrado por 'Cuenta IDNC Extraida' para verificación
+print("\nDataFrame después del filtro por 'Cuenta IDNC Extraida':")
+print(df_filtrado_idnc.head())
+
+# Sumar valores de las columnas deseadas para el DataFrame filtrado por 'Cuenta'
+columnas_sumar = ['Saldo Capital', 'IDNC']  # Asegúrate de que estas sean las columnas correctas para sumar
+suma_valores_saldos = df_filtrado_saldos.groupby(['Cuenta', 'SubCuenta', 'Cuenta IDNC Extraida', 'SubCuenta IDNC Extraida'])[columnas_sumar].sum().reset_index()
+
+# Reemplazar los valores de la columna IDNC por 0 en suma_valores_saldos
+suma_valores_saldos['IDNC'] = 0
+
+# Sumar valores de las columnas deseadas para el DataFrame filtrado por 'Cuenta IDNC Extraida'
+suma_valores_idnc = df_filtrado_idnc.groupby(['Cuenta', 'SubCuenta', 'Cuenta IDNC Extraida', 'SubCuenta IDNC Extraida'])[columnas_sumar].sum().reset_index()
+
+# Reemplazar los valores de la columna Saldo Capital por 0 en suma_valores_idnc
+suma_valores_idnc['Saldo Capital'] = 0
+
+# Combinar los DataFrames resultantes
+df_combined = pd.concat([suma_valores_saldos, suma_valores_idnc], ignore_index=True)
+
+# Guardar el DataFrame combinado a un nuevo archivo CSV
+df_combined.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\df_combined.csv', index=False, sep=';')
+
+# Mostrar el DataFrame combinado para verificación
+print("\nDataFrame combinado:")
+print(df_combined.head())
