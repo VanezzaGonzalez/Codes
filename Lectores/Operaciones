@@ -1,0 +1,35 @@
+import csv
+
+# Ruta del archivo de texto y el archivo CSV de salida
+archivo_txt = r'C:\Users\fgonzalez\Downloads\836644_CRC01-1002-20231030.txt'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoOperaciones.csv'
+
+# Función para insertar punto y coma en posiciones específicas en una cadena
+def insertar_punto_y_coma(cadena, posiciones):
+    # Convertimos la cadena a una lista para manipularla más fácilmente
+    lista_cadena = list(cadena)
+
+    # Insertamos punto y coma en las posiciones especificadas
+    for pos in posiciones:
+        lista_cadena.insert(pos, ';')
+
+    # Convertimos la lista de nuevo a cadena
+    return ''.join(lista_cadena)
+
+# Lee el archivo de texto y conviértelo a un archivo CSV con punto y coma en posiciones específicas
+with open(archivo_txt, 'r') as txtfile, open(archivo_csv, 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=';')
+    for linea in txtfile:
+        # Si la línea contiene la cadena específica, no la escribimos en el archivo CSV
+        if "OPE; RACI;ON ; 20231030100200025062;;;;;;;;;;;;;;;;" not in linea:
+            # Aquí especifica las posiciones en las que quieres colocar los punto y coma
+            posiciones = [3, 8, 12, 73, 77, 86, 95, 99, 118, 139, 160, 179, 200, 207, 212, 219, 225, 231, 241]  # Ejemplo de posiciones
+
+            # Insertamos los punto y coma en las posiciones deseadas
+            nueva_linea = insertar_punto_y_coma(linea.strip(), posiciones)
+
+            # Convertir la línea en una lista de strings
+            lista_datos = nueva_linea.split(';')
+
+            # Escribir la línea como una lista de strings
+            writer.writerow(lista_datos)
