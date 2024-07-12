@@ -1,0 +1,77 @@
+import pandas as pd
+import re
+
+# Leer el archivo CSV
+archivo_entrada = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\11 tanda\Operaciones UENO (5).csv'
+dtype_dict = {
+    'Tipo Formulario': str, 'Codigo Oficina': str, 'Tipo Operacion': str, 'Numero Operacion': str,
+    'Codigo Moneda': str, 'Fecha Operacion': str, 'Fecha Primer Vencimiento': str, 'Cuota Pactada': str,
+    'Cta Cap Original': str, 'Monto Cap Original': str, 'Linea Credito': str, 'Cta. Interes Original': str,
+    'Monto Interes Original': str, 'Actividad Origen': str, 'Id Region': str, 'Actividad Destino': str,
+    'Plazo': str, 'Tasa Nominal Pactada': str, 'Nro Registro': str
+}
+datos = pd.read_csv(archivo_entrada, sep= ';', dtype=dtype_dict)
+
+# Convertir la columna 'Fecha Operacion' al formato deseado (sin '-')
+datos['Fecha Operacion'] = pd.to_datetime(datos['Fecha Operacion']).dt.strftime('%Y%m%d')
+
+# Convertir la columna 'Fecha Primer Vto.' al formato deseado (sin '-' y sin '00:00:00')
+datos['Fecha Primer Vencimiento'] = pd.to_datetime(datos['Fecha Primer Vencimiento']).dt.strftime('%Y%m%d')
+
+# Reemplazar el primer 0 en 'Codigo Oficina' por 'v'
+datos['Codigo Oficina'] = datos['Codigo Oficina'].apply(lambda x: re.sub(r'^0', 'v', x))
+
+# Mapeo para reemplazar valores de Id Region
+mapeo_id_region = {
+    'A0': '10',
+    'B0': '11',
+    'C0': '12',
+    'D0': '13',
+    'E0': '14',
+    'F0': '15',
+    'G0': '16',
+    'H0': '17',
+    'Z0': '18'
+}
+
+# Reemplazar los valores de Id Region según el mapeo
+datos['Id Region'] = datos['Id Region'].map(mapeo_id_region).fillna(datos['Id Region'])
+
+# Eliminar las columnas no deseadas
+columnas_a_eliminar = [' COUNT(Numero Operacion)', 'Fecha Vto Prox Cuota', 'Fecha Vto Primera Cuota Impaga', 'Fecha Corte', 'Dia Atraso', 'Saldo Capital', 'Cuota Caida', 'Saldo Interes A Devengar', 'Saldo Interes Dev No Cob', 'Saldo Interes Dev Cob', 'Saldo Interes Suspenso', 'Tasa Efectiva Promedio', 'Monto Prevision', 'Nro Cuota Cancelada', 'Codigo Cuenta.1', 'Codigo Cuenta.2', 'Codigo Cuenta.3', 'Codigo Cuenta.4', 'Codigo Cuenta.5', 'Codigo Cuenta.6', 'Codigo Cuenta']
+datos = datos.drop(columns=columnas_a_eliminar)
+
+# Modificar la creación de 'Llave Concatenada' eliminando espacios de 'Nro. Operacion'
+columnas_concatenar = ['Codigo Oficina', 'Codigo Tipo Operacion', 'Numero Operacion', 'Codigo Moneda']
+datos['Llave Concatenada'] = datos.apply(lambda row: ''.join(str(row[col]).replace(' ', '') for col in columnas_concatenar), axis=1)
+
+# Renombrar columnas
+datos.rename(columns={
+    'Codigo Tipo Operacion': 'Tipo Operacion',
+    'Numero Operacion': 'Nro. Operacion',
+    'Fecha Primer Vencimiento': 'Fecha Primer Vto.',
+    'Codigo Cuenta Cap Original': 'Cta Cap Original',
+    'Monto Capital Original': 'Monto Cap Original',
+    'Codigo Cuenta Int Original': 'Cta Interes Original',
+    'Codigo Actividad Origen': 'Actividad Origen',
+    'Codigo Actividad Destino': 'Actividad Destino',
+    'Tasa Nominal Pactada Promedio': 'Tasa Nominal'
+}, inplace=True)
+
+# Orden de columnas deseado
+orden_columnas = [
+    'Codigo Oficina', 'Tipo Operacion', 'Nro. Operacion', 'Codigo Moneda', 'Fecha Operacion', 'Fecha Primer Vto.', 'Cuota Pactada',
+    'Cta Cap Original', 'Monto Cap Original', 'Linea Credito', 'Cta Interes Original',
+    'Monto Interes Original', 'Actividad Origen', 'Id Region', 'Actividad Destino', 'Plazo', 'Tasa Nominal'
+]
+
+# Reordenar las columnas del DataFrame
+datos = datos[orden_columnas + [col for col in datos.columns if col not in orden_columnas]]
+
+# Mostrar DataFrame con nueva columna de concatenación
+pd.set_option('display.max_columns', None)
+print(datos)
+
+# Generar nuevo csv
+ruta_salida_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\11 tanda\Operaciones_Ueno_BI.csv'
+datos.to_csv(ruta_salida_csv, sep= ';', index=False)
