@@ -1,0 +1,53 @@
+import pandas as pd
+
+# Cargar los archivos CSV en dos DataFrames
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\11 tanda\OperacionesModifv2_part2.csv', sep=';')
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\11 tanda\Operaciones_Ueno_BI.csv', sep=';')
+
+# Reemplazar comas por puntos en la columna 'Cuota Pactada'
+df2['Cuota Pactada'] = df2['Cuota Pactada'].str.replace(',', '.').astype('float64').astype('int64')
+
+# Reemplazar caracteres no numéricos por espacios en blanco y luego convertir a int64
+df2['Cta Cap Original'] = df2['Cta Cap Original'].str.replace(r'[^0-9]', '', regex=True)
+df2['Cta Cap Original'] = pd.to_numeric(df2['Cta Cap Original'], errors='coerce', downcast='integer')
+
+# Reemplazar las comas por puntos decimales y luego convertir a float64
+df2['Monto Cap Original'] = df2['Monto Cap Original'].str.replace(',', '.', regex=True)
+df2['Monto Cap Original'] = df2['Monto Cap Original'].astype('float64')
+
+# Reemplazar las comas por puntos decimales y luego convertir a float64
+df2['Linea Credito'] = df2['Linea Credito'].str.replace(',', '.', regex=True)
+df2['Linea Credito'] = df2['Linea Credito'].astype('float64')
+
+# Reemplazar las comas por puntos decimales y luego convertir a float64
+df2['Monto Interes Original'] = df2['Monto Interes Original'].str.replace(',', '.', regex=True)
+df2['Monto Interes Original'] = df2['Monto Interes Original'].astype('float64')
+
+# Filtrar valores no enteros y reemplazarlos con NaN
+df2['Plazo'] = pd.to_numeric(df2['Plazo'], errors='coerce')
+# Convertir la columna a enteros
+df2['Plazo'] = df2['Plazo'].fillna(0).astype('int64')
+
+# Reemplazar comas por puntos en la columna 'Tasa Nominal'
+df2['Tasa Nominal'] = df2['Tasa Nominal'].str.replace(',', '.')
+# Convertir la columna a tipo float
+df2['Tasa Nominal'] = df2['Tasa Nominal'].astype('float64')
+
+# Convertir columnas específicas a los tipos deseados
+df2['Cuota Pactada'] = df2['Cuota Pactada'].astype('int64')
+df2['Cta Cap Original'] = df2['Cta Cap Original'].astype('int64')
+df2['Monto Cap Original'] = df2['Monto Cap Original'].astype('float64')
+df2['Linea Credito'] = df2['Linea Credito'].astype('float64')
+df2['Monto Interes Original'] = df2['Monto Interes Original'].astype('float64')
+df2['Plazo'] = df2['Plazo'].astype('int64')
+df2['Tasa Nominal'] = df2['Tasa Nominal'].astype('float64')
+
+
+# Encontrar las filas en df1 que no están presentes en df2
+rows_not_in_df2 = df1[~df1['Llave Concatenada'].isin(df2['Llave Concatenada'])]
+
+# Mostrar las filas que no están presentes en df2
+print("Filas en Archivo UENO que no están presentes en BI:")
+print(rows_not_in_df2)
+
+rows_not_in_df2.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\11 tanda\Opes_Ueno_NO_BIv2.csv', index=False, sep=';')
