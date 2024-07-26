@@ -1,0 +1,19 @@
+# Ruta del archivo de texto
+archivo_txt = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\CRC02-1046-20240310 (1).txt'
+
+# Leer el archivo de texto y verificar cada carácter
+with open(archivo_txt, 'r', encoding='ANSI') as txtfile:
+    linea_numero = 0
+    for linea in txtfile:
+        linea_numero += 1
+        for i, caracter in enumerate(linea):
+            try:
+                caracter.encode('cp1252')
+            except UnicodeEncodeError as e:
+                print(f'Error en la línea {linea_numero}, posición {i}: carácter {repr(caracter)} no puede ser codificado en cp1252')
+                # Mostrar la línea con el carácter problemático resaltado
+                contexto = (linea[max(i-10, 0):i] + '[ERROR]' + linea[i+1:i+11])
+                print(f'Contexto: {contexto}')
+                break  # Salir del bucle al encontrar el primer error en la línea
+
+print("Verificación completa.")
