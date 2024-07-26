@@ -1,0 +1,23 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica.csv'
+
+# Leer el archivo completo
+df = pd.read_csv(archivo_csv, encoding='ANSI', delimiter=';')
+
+# Imprimir los nombres de las columnas
+print(df.columns)
+
+# Crear un DataFrame con las columnas "Nro. Documento" y "SR"
+# Asegúrate de que los nombres de las columnas coincidan exactamente con los del archivo CSV
+df_subset = df[['Nro. Documento', 'SR']]
+
+# Eliminar los espacios en blanco al inicio y al final de los valores de la columna "Nro. Documento"
+df_subset['Nro. Documento'] = df_subset['Nro. Documento'].str.strip()
+
+# Imprimir el DataFrame resultante
+print(df_subset)
+
+# Exportar el DataFrame a un archivo CSV
+df_subset.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion Clasifica Codeudoria.csv', index=False, sep=';')
