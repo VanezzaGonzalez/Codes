@@ -1,0 +1,81 @@
+# Nombres de los archivos
+archivo1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240106.txt'
+archivo2 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240107.txt'
+archivo3 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240113.txt'
+archivo4 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240114.txt'
+archivo5 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240120.txt'
+archivo6 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240121.txt'
+archivo7 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240203.txt'
+archivo8 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240204.txt'
+archivo9 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240210.txt'
+archivo10 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240211.txt'
+archivo11 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240217.txt'
+archivo12 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240218.txt'
+archivo13 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240302.txt'
+archivo14 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\CRC01-1046-20240303.txt'
+archivo_salida = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\archivo_fusionado.txt'
+
+# Leer el contenido del primer archivo
+with open(archivo1, 'r', encoding='utf-8') as file1:
+    contenido1 = file1.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo2, 'r', encoding='utf-8') as file2:
+    contenido2 = file2.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo3, 'r', encoding='utf-8') as file3:
+    contenido3 = file3.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo4, 'r', encoding='utf-8') as file4:
+    contenido4 = file4.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo5, 'r', encoding='utf-8') as file5:
+    contenido5 = file5.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo6, 'r', encoding='utf-8') as file6:
+    contenido6 = file6.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo7, 'r', encoding='utf-8') as file7:
+    contenido7 = file7.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo8, 'r', encoding='utf-8') as file8:
+    contenido8 = file8.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo9, 'r', encoding='utf-8') as file9:
+    contenido9 = file9.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo10, 'r', encoding='utf-8') as file10:
+    contenido10 = file10.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo11, 'r', encoding='utf-8') as file11:
+    contenido11 = file11.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo12, 'r', encoding='utf-8') as file12:
+    contenido12 = file12.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo13, 'r', encoding='utf-8') as file13:
+    contenido13 = file13.read()
+
+# Leer el contenido del segundo archivo
+with open(archivo14, 'r', encoding='utf-8') as file14:
+    contenido14 = file14.read()
+
+# Fusionar el contenido
+contenido_fusionado = contenido1 + contenido2 + contenido3 + contenido4 + contenido5 + contenido6 + contenido7 + contenido8 + contenido9 + contenido10 + contenido11 + contenido12 + contenido13 + contenido14
+
+# Guardar el contenido fusionado en un nuevo archivo
+with open(archivo_salida, 'w', encoding='utf-8') as file_out:
+    file_out.write(contenido_fusionado)
+
+print(f"Archivos {archivo1} y {archivo2} han sido fusionados en {archivo_salida}")
