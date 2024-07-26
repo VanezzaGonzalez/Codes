@@ -1,0 +1,38 @@
+import pandas as pd
+
+df_opegaran_RCF = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Ueno_Opegaran_RCF.csv', sep=';', dtype={'Numero Operacion': str, 'Cod Tipo Operacion': str, 'Operacion Moneda': str, 'Operacion Sucursal Codigo': str, 'Garantia Sucursal Codigo': str})
+df_operaciones_BI = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Operaciones_Ueno_BI.csv', sep=';', dtype={'Nro. Operacion': str, 'Tipo Operacion': str, 'Codigo Moneda': str, 'Codigo Oficina': str})
+
+# Renombrar la columna 'Numero Operacion' a 'Nro. Operacion' en df_opegaran_RCF
+df_opegaran_RCF.rename(columns={'Numero Operacion': 'Nro. Operacion'}, inplace=True)
+
+# Crear la columna 'Llave Concatenada' en ambos DataFrames
+df_opegaran_RCF['Llave Concatenada'] = df_opegaran_RCF['Cod Tipo Operacion'] + df_opegaran_RCF['Nro. Operacion'] + df_opegaran_RCF['Operacion Moneda']
+df_operaciones_BI['Llave Concatenada'] = df_operaciones_BI['Tipo Operacion'] + df_operaciones_BI['Nro. Operacion'] + df_operaciones_BI['Codigo Moneda']
+
+# Encontrar números de operación comunes
+common_operations = pd.merge(df_opegaran_RCF, df_operaciones_BI, how='inner', on='Llave Concatenada', suffixes=('_Opegaran', '_Operaciones'))
+
+# Eliminar duplicados en el DataFrame resultante
+common_operations = common_operations.drop_duplicates(subset='Llave Concatenada', keep='first')
+
+# Mostrar las filas comunes
+print("Operaciones Comunes (Operaciones vigentes con garantias vigentes):")
+print(common_operations)
+
+# Encontrar números de operación únicos en df_opegaran
+unique_in_opegaran = df_opegaran_RCF[~df_opegaran_RCF['Llave Concatenada'].isin(df_operaciones_BI['Llave Concatenada'])]
+
+# Mostrar los números de operación únicos en df_opegaran
+print("\nOperaciones Únicas en Opegaran_RCF (Operaciones que ya no están vigentes):")
+print(unique_in_opegaran)
+
+# Encontrar números de operación únicos en df_operaciones
+unique_in_operaciones = df_operaciones_BI[~df_operaciones_BI['Llave Concatenada'].isin(df_opegaran_RCF['Llave Concatenada'])]
+
+# Mostrar los números de operación únicos en df_operaciones
+print("\nOperaciones Únicas en BI (Operaciones que no tienen garantias):")
+print(unique_in_operaciones)
+
+# Exportar el DataFrame a un archivo CSV
+common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\comunes_BI_OpegaranRCF.csv', index=False, sep=';')
