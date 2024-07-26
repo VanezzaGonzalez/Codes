@@ -1,0 +1,32 @@
+import pandas as pd
+import re
+
+# Rutas de los archivos CSV
+archivo_1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Vinculos UENO.csv'
+
+
+df_1 = pd.read_csv(archivo_1, delimiter=';', encoding='utf-8', dtype=str)
+
+
+df_concatenado = pd.concat([df_1], axis=0)
+
+# Excluir la columna 'Año Mes'
+df_concatenado = df_concatenado.drop(columns=['Año Mes'])
+
+# Convertir la columna 'Fecha de nacimiento' al formato deseado
+df_concatenado['Fecha Nacimiento'] = pd.to_datetime(df_concatenado['Fecha Nacimiento']).dt.strftime('%Y%m%d')
+
+# Reemplazar el primer 0 en 'Codigo Oficina' por 'v'
+df_concatenado['Codigo Oficina'] = df_concatenado['Codigo Oficina'].apply(lambda x: re.sub(r'^0', 'v', x))
+
+# Agregar una nueva columna que concatene los valores específicos
+columnas_a_concatenar = ['Codigo Oficina', 'Codigo Tipo Operacion', 'Numero Operacion', 'Codigo Moneda', 'Numero Documento', 'Codigo Tipo Vinculo']
+df_concatenado['Llave Concatenada'] = df_concatenado[columnas_a_concatenar].apply(lambda x: ''.join(x), axis=1)
+
+# Eliminar los espacios en blanco de la columna 'Llave Concatenada'
+df_concatenado['Llave Concatenada'] = df_concatenado['Llave Concatenada'].str.replace(' ', '')
+
+pd.set_option('display.max_columns', None)
+print(df_concatenado.head())
+
+df_concatenado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Vinculos_Ueno_BI.csv', index=False, sep=';')
