@@ -1,0 +1,131 @@
+import pandas as pd
+import os
+
+# Ruta del archivo de texto y el archivo CSV de salida
+archivo_txt = r"C:\Users\fgonzalez\Downloads\901816_CRC03-1003-20240628.txt"
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos.csv'
+
+# Función para insertar punto y coma en posiciones específicas en una cadena
+def insertar_punto_y_coma(cadena, posiciones):
+    lista_cadena = list(cadena)
+    for pos in posiciones:
+        lista_cadena.insert(pos, ';')
+    return ''.join(lista_cadena)
+
+# Función para transformar columnas para Grupo A
+def transformar_grupo_a(valor):
+    sector = valor[1]
+    capitulo = valor[2]
+    grupo = valor[4]
+    cuenta = valor[6:9]
+    subcta = valor[10:12]
+    return f"{sector}{capitulo}0{grupo}0{cuenta}0{subcta}"
+
+# Función para transformar columnas para Grupo B
+def transformar_grupo_b(valor):
+    sector = valor[0]
+    capitulo = valor[1]
+    grupo = valor[3]
+    cuenta = valor[5:8]
+    subcta = valor[9:11]
+    return f"{sector}{capitulo}0{grupo}0{cuenta}0{subcta}"
+
+# Función para transformar columnas para Grupo C
+def transformar_grupo_c(valor):
+    sector = valor[7]
+    capitulo = valor[8]
+    grupo = valor[10]
+    cuenta = valor[12:15]
+    subcta = valor[16:18]
+    return f"{sector}{capitulo}0{grupo}0{cuenta}0{subcta}"
+
+# Función para extraer la cuenta según el grupo identificado
+def extraer_cuenta_grupo(valor, grupo):
+    if grupo == 'A':
+        return valor[5:8]
+    elif grupo == 'B':
+        return valor[5:8]
+    elif grupo == 'C':
+        return valor[12:15]
+    return None
+
+# Lista con los nombres de las columnas
+nombres_columnas = [
+    'Tipo Formulario', 'Codigo Oficina', 'Tipo Operacion', 'Nro. Operacion', 'Codigo Moneda', 'Fecha Corte',
+    'Fecha Vencimiento Prox. Cuota', 'Fecha Vencimiento Primera Cuota Impaga', 'Días Atraso', 'Cuenta Contable Saldo Capital', 'Saldo Capital',
+    'Cuota Caída', 'Cuenta Interes a Devengar', 'Interes a Devengar', 'Cuenta IDNC', 'IDNC',
+    'Cuenta IDC', 'IDC', 'Cuenta Interes en Suspenso', 'Interes en Suspenso', 'Cuenta Contingencia', 'Contingencia', 'Tasa Efectiva', 'Cuenta Previsiones', 'Prevision', 'Cuotas canceladas', 'Clasificacion', 'Numero de Registro'
+]
+
+# Identificar el grupo basado en COD ENTI en el nombre del archivo
+def identificar_grupo(nombre_archivo):
+    cod_enti = int(nombre_archivo.split('-')[1])
+    if cod_enti in [1003, 1005, 1004, 1002, 1039]:
+        return 'A'
+    elif cod_enti in [2078, 1043, 1042, 1040, 1008, 1044, 2080, 2071, 1045, 1046, 1047, 2013, 1017, 1041, 1030, 1020]:
+        return 'B'
+    elif cod_enti == 1006:
+        return 'C'
+    else:
+        return None
+
+# Leer el archivo de texto y conviértelo a un archivo CSV con punto y coma en posiciones específicas
+with open(archivo_txt, 'r', encoding='latin1') as txtfile:
+    lineas = txtfile.readlines()
+
+# Crear un DataFrame con las líneas leídas
+posiciones = [3, 8, 12, 73, 77, 86, 95, 104, 110, 129, 150, 171, 190, 211, 230, 251, 270, 291, 310, 331, 350, 371, 377, 396, 417, 421, 424]
+datos = []
+for linea in lineas[1:]:  # Saltar la primera línea
+    nueva_linea = insertar_punto_y_coma(linea.strip(), posiciones)
+    lista_datos = nueva_linea.split(';')
+    datos.append(lista_datos)
+
+df = pd.DataFrame(datos, columns=nombres_columnas)
+
+# Identificar el grupo
+grupo = identificar_grupo(os.path.basename(archivo_txt))
+
+# Aplicar transformaciones según el grupo
+columnas_a_transformar = ['Cuenta Contable Saldo Capital', 'Cuenta Interes a Devengar', 'Cuenta IDNC', 'Cuenta IDC', 'Cuenta Interes en Suspenso', 'Cuenta Contingencia', 'Cuenta Previsiones']
+if grupo == 'A':
+    for columna in columnas_a_transformar:
+        df[columna] = df[columna].apply(transformar_grupo_a)
+elif grupo == 'B':
+    for columna in columnas_a_transformar:
+        df[columna] = df[columna].apply(transformar_grupo_b)
+elif grupo == 'C':
+    for columna in columnas_a_transformar:
+        df[columna] = df[columna].apply(transformar_grupo_c)
+
+# Agregar la columna 'Moneda' según la lógica especificada
+df['Moneda'] = df['Codigo Moneda'].apply(lambda x: 'NACIONAL' if x == 'PYG' else 'EXTRANJERA')
+
+# Crear la nueva columna 'Cuenta' según el grupo
+df['Cuenta'] = df.apply(lambda row: extraer_cuenta_grupo(row['Cuenta Contable Saldo Capital'], grupo), axis=1)
+
+# Crear un nuevo DataFrame con las columnas requeridas
+df_nuevo = df[
+    ['Codigo Oficina', 'Tipo Operacion', 'Nro. Operacion', 'Codigo Moneda',
+     'Cuenta Contable Saldo Capital', 'Saldo Capital', 'Cuenta Interes a Devengar', 'Interes a Devengar',
+     'Cuenta IDNC', 'IDNC', 'Cuenta IDC', 'IDC', 'Cuenta Interes en Suspenso', 'Interes en Suspenso',
+     'Cuenta Contingencia', 'Contingencia', 'Cuenta Previsiones', 'Prevision', 'Moneda', 'Cuenta']
+]
+
+print(df_nuevo)
+
+# Guardar el DataFrame resultante en un archivo CSV
+df_nuevo.to_csv(archivo_csv, sep=';', index=False, encoding='latin1')
+
+# Conjunto de cuentas a verificar
+cuentas_verificar = {284, 136, 290, 102, 138, 148, 292, 196, 236, 238, 280, 104, 108, 110, 112, 152, 160, 162, 164, 166, 294, 156, 298, 306, 214, 134, 224, 226, 230, 232, 234}
+
+# Filtrar las filas según las condiciones requeridas
+df_verificacion = df[
+    ((df['Contingencia'] != '00000000000000000000') & (df['Cuenta'].astype(int).isin(cuentas_verificar))) |
+    ((df['Cuenta'].astype(int) == 697) & (df['Contingencia'] != '00000000000000000000'))
+]
+
+# Mostrar el resultado
+pd.set_option('display.max_columns', None)
+print(df_verificacion)
