@@ -1,0 +1,31 @@
+import pandas as pd
+
+# Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+
+# Convertir la columna 'Id Region' a tipo cadena (string)
+df1['Linea Credito'] = df1['Linea Credito'].astype(str)
+df2['Linea Credito'] = df2['Linea Credito'].astype(str)
+
+# Limpiar espacios en las columnas 'Id Region'
+df1['Linea Credito'] = df1['Linea Credito'].str.strip()
+df2['Linea Credito'] = df2['Linea Credito'].str.strip()
+
+# Reemplazar puntos por comas en la columna 'Tasa Nominal' del df2
+df2['Linea Credito'] = df2['Linea Credito'].str.replace('.', ',', regex=False)
+
+# Encuentra las filas donde 'Id Region' es diferente basado en 'Llave Concatenada'
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+diferencias_linea = merged[merged['Linea Credito_df1'] != merged['Linea Credito_df2']]
+
+# Filtrar las filas donde ambos 'Id Region' son NaN
+mask_both_nan = (diferencias_linea['Linea Credito_df1'].isna()) & (diferencias_linea['Linea Credito_df2'].isna())
+diferencias_linea = diferencias_linea[~mask_both_nan]
+
+# Imprimir las filas donde 'Id Region' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_linea)
+
+# Exportar a CSV
+diferencias_linea.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_linea.csv', index=False, sep=';')
