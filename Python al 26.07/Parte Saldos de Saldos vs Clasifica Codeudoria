@@ -1,0 +1,52 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+archivo_csv = r"C:\Users\fgonzalez\Downloads\saldos.csv"
+
+# Leer el archivo CSV en un DataFrame de pandas
+df = pd.read_csv(archivo_csv, delimiter=';', encoding='latin1')
+
+# Limpiar las columnas 'Saldo Capital' y 'Saldo Interes Dev No Cob' y convertirlas a tipo float
+df['Saldo Capital'] = df['Saldo Capital'].str.replace('.', '').str.replace(',', '.').astype(float)
+df['Saldo Interes Dev No Cob'] = df['Saldo Interes Dev No Cob'].str.replace('.', '').str.replace(',', '.').astype(float)
+
+# Crear las columnas "Cuenta" y "SubCuenta" separando el valor de "Cod Cuenta Cap"
+df['Cuenta'] = df['Cod Cuenta Cap'].astype(str).str.slice(5, 8)
+df['SubCuenta'] = df['Cod Cuenta Cap'].astype(str).str.slice(9, 11)
+
+# Filtrar el DataFrame por 'Tipo Vinculo'
+tipos_vinculo = ['CODEUDOR', 'COGARANTE', 'COMPRA DE CARTERA CON RECURSO', 'CONYUGE', 'EMISOR', 'GARANTE']
+df_filtrado = df[df['Tipo vinculo'].isin(tipos_vinculo)]
+
+# Filtrar el DataFrame por 'Cuenta' y 'SubCuenta'
+deuda_cuentas = [
+    '417', '419', '433', '141', '169', '171', '173', '175', '177', '179', '181', '183', '185', '187', '189', '191', '193', '195', '197', '199',
+    '201', '203', '205', '207', '209', '211', '213', '215', '217', '219', '221', '223', '251', '265', '267', '269', '271', '273', '275', '351',
+    '369', '371', '373', '375', '377', '381', '383', '385', '387', '397', '405', '143', '441', '443', '449'
+]
+deuda_subcuentas = [
+    '133012', '137012', '131012', '139012', '135024', '135026', '135012', '137024', '137026', '139024',
+    '133024', '133026', '131024', '139026', '131026'
+]
+
+# Convertir deuda_cuentas y deuda_subcuentas a sets para mejorar el rendimiento de búsqueda
+deuda_cuentas_set = set(deuda_cuentas)
+deuda_subcuentas_set = set(deuda_subcuentas)
+
+# Filtrar el DataFrame
+df_deuda = df_filtrado[
+    (df_filtrado['Cuenta'].isin(deuda_cuentas_set)) |
+    (df_filtrado['Cuenta'] + df_filtrado['SubCuenta']).isin(deuda_subcuentas_set)
+]
+
+# Crear una nueva columna 'Saldo Total' que es la suma de 'Saldo Capital' y 'Saldo Interes Dev No Cob'
+df_deuda['Saldo Total'] = df_deuda['Saldo Capital'] + df_deuda['Saldo Interes Dev No Cob']
+
+# Agrupar por 'Nro. Documento' y sumar los valores de 'Saldo Total'
+deuda_saldos_agrupados = df_deuda.groupby('Nro documento')['Saldo Total'].sum().reset_index()
+
+# Imprimir el DataFrame resultante
+print(deuda_saldos_agrupados)
+
+# Exportar el DataFrame a un archivo CSV
+deuda_saldos_agrupados.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion saldos Codeudoria.csv', index=False, sep=';')
