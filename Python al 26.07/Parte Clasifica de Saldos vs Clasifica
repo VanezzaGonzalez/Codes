@@ -1,0 +1,35 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica.csv'
+
+# Leer el archivo CSV en un DataFrame de pandas
+df = pd.read_csv(archivo_csv, delimiter=';', encoding='latin1')
+
+# Calcular las sumas según lo especificado
+deuda_clasifica = df['TR'].sum() + df['DR'].sum()
+incobrable_clasifica = df['Incobrable'].sum()
+venta_cartera_clasifica = df['Venta Cartera'].sum()
+fideicomiso_clasifica = df['Fideicomiso'].sum()
+contingencia_clasifica = df['ER'].sum()
+
+deuda_clasifica /= 100
+incobrable_clasifica /= 100
+venta_cartera_clasifica /= 100
+fideicomiso_clasifica /= 100
+contingencia_clasifica /= 100
+
+
+# Crear un nuevo DataFrame con los resultados
+resultados = {
+    'Categoria': ['Deuda Clasifica', 'Incobrable Clasifica', 'Venta Cartera Clasifica', 'Fideicomiso Clasifica', 'Contingencia Clasifica'],
+    'Valor': [deuda_clasifica, incobrable_clasifica, venta_cartera_clasifica, fideicomiso_clasifica, contingencia_clasifica]
+}
+
+resultados_df = pd.DataFrame(resultados)
+
+# Mostrar los resultados
+print(resultados_df)
+
+# Guardar los resultados en un nuevo archivo CSV
+resultados_df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\resultados_clasifica.csv', index=False, sep=';')
