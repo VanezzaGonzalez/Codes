@@ -1,0 +1,27 @@
+import pandas as pd
+
+# Leer los DataFrames
+df_opegaran = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Ueno_garantias_comunes.csv', sep=';')
+df_gtiarcf = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoGarantiasModif.csv', sep=';')
+
+# Renombrar la columna "Numero Garantia" a "Codigo Garantia" en df_opegaran
+df_gtiarcf.rename(columns={'Numero Garantia': 'Codigo Garantia'}, inplace=True)
+
+# Convertir la columna 'Codigo Garantia' a tipo object
+df_opegaran['Codigo Garantia'] = df_opegaran['Codigo Garantia'].astype('str')
+df_gtiarcf['Codigo Garantia'] = df_gtiarcf['Codigo Garantia'].astype('str')
+
+# Eliminar las columnas especificadas
+columns_to_drop = ['Sucursal', 'Tipo Operacion_Opegaran', 'Nro. Operacion_Opegaran', 'Codigo Moneda_Opegaran', 'Sucursal Garantia', 'Codigo Moneda Garantia']
+df_opegaran = df_opegaran.drop(columns=columns_to_drop, errors='ignore')
+
+# Encontrar garantías comunes
+common_garantias = pd.merge(df_opegaran, df_gtiarcf, how='inner', on='Codigo Garantia', suffixes=('_Opegaran', '_gtiarcf'))
+
+# Mostrar las filas comunes
+print("Garantias Comunes:")
+pd.set_option('display.max_columns', None)
+print(common_garantias)
+
+# Exportar el DataFrame a un archivo CSV
+common_garantias.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\cruce_opegaran_rcf.csv', index=False, sep=';')
