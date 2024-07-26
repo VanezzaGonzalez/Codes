@@ -1,0 +1,30 @@
+import pandas as pd
+
+df_opegaran = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoOpeGaranModif.csv', sep=';')
+df_operaciones = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\Cuarta tanda de validaciones\UenoOperacionesModifv2_part2.csv', sep=';', dtype={'Nro. Operacion': str})
+
+# Encontrar números de operación comunes
+common_operations = pd.merge(df_opegaran, df_operaciones, how='inner', on='Llave Concatenada', suffixes=('_Opegaran', '_Operaciones'))
+
+# Mostrar las filas comunes
+print("Operaciones Comunes:")
+print(common_operations)
+
+# Encontrar números de operación únicos en df_opegaran
+unique_in_opegaran = df_opegaran[~df_opegaran['Llave Concatenada'].isin(df_operaciones['Llave Concatenada'])]
+
+# Mostrar los números de operación únicos en df_opegaran
+print("\nOperaciones Únicas en Opegaran:")
+print(unique_in_opegaran)
+
+# Encontrar números de operación únicos en df_operaciones
+unique_in_operaciones = df_operaciones[~df_operaciones['Llave Concatenada'].isin(df_opegaran['Llave Concatenada'])]
+
+# Mostrar los números de operación únicos en df_operaciones
+print("\nOperaciones Únicas en Operaciones:")
+print(unique_in_operaciones)
+
+# Exportar los resultados a archivos CSV
+common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Ueno_garantias_comunes.csv', index=False, sep=';')
+unique_in_opegaran.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Ueno_garantias_unicas_en_opegaran.csv', index=False, sep=';')
+unique_in_operaciones.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Ueno_garantias_unicas_en_operaciones.csv', index=False, sep=';')
