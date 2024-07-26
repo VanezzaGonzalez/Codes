@@ -1,0 +1,22 @@
+import pandas as pd
+
+# Rutas de los archivos CSV
+df1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Vinculos_UENO_BI.csv'
+df2 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\UenoVinculosModif.csv'
+
+# Leer los archivos CSV
+df_1 = pd.read_csv(df1, sep=';', dtype=str)
+df_2 = pd.read_csv(df2, sep=';', dtype=str)
+
+# Realizar el merge de los DataFrames en base a la columna 'Llave Concatenada'
+merged = pd.merge(df_1, df_2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+
+# Comparar las columnas 'Codigo Tipo Vinculo' de los DataFrames df1 y df2 después del merge
+diferencias_codigo_vinculo = merged[merged['Codigo Tipo Vinculo_df1'] != merged['Codigo Tipo Vinculo_df2']]
+
+# Filtrar las filas donde ambos 'Codigo Tipo Vinculo' son NaN si es necesario
+mask_both_nan = (diferencias_codigo_vinculo['Codigo Tipo Vinculo_df1'].isna()) & (diferencias_codigo_vinculo['Codigo Tipo Vinculo_df2'].isna())
+diferencias_codigo_vinculo = diferencias_codigo_vinculo[~mask_both_nan]
+
+# Mostrar las filas donde 'Codigo Tipo Vinculo' es diferente
+print(diferencias_codigo_vinculo)
