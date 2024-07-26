@@ -1,0 +1,42 @@
+import pandas as pd
+
+# Rutas de los archivos CSV
+archivo_validacion = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion_Saldos.csv'
+archivo_clasifica = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\resultados_clasifica.csv'
+
+# Leer los archivos CSV en DataFrames de pandas
+df_validacion = pd.read_csv(archivo_validacion, delimiter=';', encoding='latin1')
+df_clasifica = pd.read_csv(archivo_clasifica, delimiter=';', encoding='latin1')
+
+# Renombrar valores de Categoria en df_validacion
+renombrar_validacion = {
+    'Deuda Saldos': 'Deuda Directa',
+    'Incobrable Saldos': 'Incobrable',
+    'Venta de Cartera Saldos': 'Venta Cartera',
+    'Fideicomiso Saldos': 'Fideicomiso',
+    'Contingencia Saldos': 'Contingencia'
+}
+df_validacion['Categoria'] = df_validacion['Categoria'].map(renombrar_validacion)
+
+# Renombrar valores de Categoria en df_clasifica
+renombrar_clasifica = {
+    'Deuda Clasifica': 'Deuda Directa',
+    'Incobrable Clasifica': 'Incobrable',
+    'Venta Cartera Clasifica': 'Venta Cartera',
+    'Fideicomiso Clasifica': 'Fideicomiso',
+    'Contingencia Clasifica': 'Contingencia'
+}
+df_clasifica['Categoria'] = df_clasifica['Categoria'].map(renombrar_clasifica)
+
+# Fusionar los DataFrames usando la columna 'Categoria'
+df_fusionado = pd.merge(df_validacion, df_clasifica, on='Categoria', suffixes=('_Validacion', '_Clasifica'))
+
+# Calcular la diferencia entre Valor_Validacion y Valor_Clasifica
+df_fusionado['Diferencia'] = df_fusionado['Valor_Validacion'] - df_fusionado['Valor_Clasifica']
+
+# Mostrar el DataFrame fusionado con la nueva columna Diferencia
+print("DataFrame fusionado con diferencia:")
+print(df_fusionado)
+
+# Exportar el DataFrame a un archivo CSV
+df_fusionado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion SVC.csv', index=False, sep=';')
