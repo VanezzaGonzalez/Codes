@@ -1,0 +1,52 @@
+import csv
+import pandas as pd
+
+# Ruta del archivo de texto y el archivo CSV de salida
+archivo_txt = r"C:\Users\fgonzalez\Downloads\CRC06-1039-20240630 (1).txt"
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica.csv'
+
+
+# Función para insertar punto y coma en posiciones específicas en una cadena
+def insertar_punto_y_coma(cadena, posiciones):
+    # Convertimos la cadena a una lista para manipularla más fácilmente
+    lista_cadena = list(cadena)
+
+    # Insertamos punto y coma en las posiciones especificadas
+    for pos in posiciones:
+        lista_cadena.insert(pos, ';')
+
+    # Convertimos la lista de nuevo a cadena
+    return ''.join(lista_cadena)
+
+# Lista con los nombres de las columnas
+nombres_columnas = [
+    'Tipo Formulario', 'Tipo Documento', 'Nro. Documento', 'Fecha Nacimiento', 'Nombres', 'Apellidos',
+    'Clasificacion (objetiva)', 'Clasificacion subjetiva', 'Clasificacion fideicomiso', '% prevision', 'Venta Cartera',
+    'Incobrable', 'Capital vencido', 'Interes vencido', 'Garantia para previsiones', '1ra prevision capital',
+    '1ra prevision interes', '2da prevision capital', '2da prevision interes', 'Fideicomiso', 'Campo reservado', 'TR', 'DR', 'ER', 'SR', 'Numero de Registro'
+]
+
+
+# Leer el archivo de texto y conviértelo a un archivo CSV con punto y coma en posiciones específicas
+with open(archivo_txt, 'r') as txtfile, open(archivo_csv, 'w', newline='') as csvfile:
+    writer = csv.writer(csvfile, delimiter=';')
+
+    # Saltar la primera línea del archivo de texto
+    next(txtfile)
+
+    # Escribir los nombres de las columnas en el archivo CSV
+    writer.writerow(nombres_columnas)
+
+    # Procesar las líneas del archivo de texto y escribir al archivo CSV
+    for linea in txtfile:
+        # Aquí especifica las posiciones en las que quieres colocar los punto y coma
+        posiciones = [3, 7, 38, 47, 303, 404, 407, 410, 412, 418, 439, 460, 481, 502, 523, 544, 565, 586, 607, 628, 649, 670, 691, 712, 733]  # Ejemplo de posiciones
+
+        # Insertar los punto y coma en las posiciones deseadas
+        nueva_linea = insertar_punto_y_coma(linea.strip(), posiciones)
+
+        # Convertir la línea en una lista de strings
+        lista_datos = nueva_linea.split(';')
+
+        # Escribir la línea como una lista de strings
+        writer.writerow(lista_datos)
