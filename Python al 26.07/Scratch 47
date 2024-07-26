@@ -1,0 +1,44 @@
+import pandas as pd
+
+# Leer los archivos CSV
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\17 tanda\OperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\17 tanda\Operaciones_Ueno_BI.csv', sep=';')
+
+# Verificar los primeros valores y tipos de datos
+print("Tipo de datos en df1['Id Region']:", df1['Id Region'].dtype)
+print("ANTES CONVERSION Primeros valores en df1['Id Region']:\n", df1['Id Region'].head())
+
+print("Tipo de datos en df2['Id Region']:", df2['Id Region'].dtype)
+print("ANTES CONVERSION Primeros valores en df2['Id Region']:\n", df2['Id Region'].head())
+
+# Convertir la columna 'Id Region' a cadena y manejar valores no cadena
+def convert_to_string(x):
+    try:
+        return str(int(x))  # Convertir a entero primero para eliminar decimales
+    except ValueError:
+        return str(x)  # Convertir a cadena si no se puede a entero
+
+df1['Id Region'] = df1['Id Region'].apply(convert_to_string).str.strip()
+df2['Id Region'] = df2['Id Region'].apply(convert_to_string).str.strip()
+
+# Verificar la conversión
+print("Tipo de datos en df1['Id Region']:", df1['Id Region'].dtype)
+print("Primeros valores en df1['Id Region']:\n", df1['Id Region'].head())
+
+print("Tipo de datos en df2['Id Region']:", df2['Id Region'].dtype)
+print("Primeros valores en df2['Id Region']:\n", df2['Id Region'].head())
+
+# Encuentra las filas donde 'Id Region' es diferente basado en 'Llave Concatenada'
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+diferencias_id_region = merged[merged['Id Region_df1'] != merged['Id Region_df2']]
+
+# Filtrar las filas donde ambos 'Id Region' son NaN
+mask_both_nan = (diferencias_id_region['Id Region_df1'].isna()) & (diferencias_id_region['Id Region_df2'].isna())
+diferencias_id_region = diferencias_id_region[~mask_both_nan]
+
+# Imprimir las filas donde 'Id Region' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_id_region)
+
+# Exportar a CSV
+diferencias_id_region.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\17 tanda\Diferencias_Id_Region.csv', index=False, sep=';')
