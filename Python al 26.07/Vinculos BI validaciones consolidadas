@@ -1,0 +1,30 @@
+import pandas as pd
+import re
+
+# Leer el archivo CSV
+df = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Vinculos_pasivo_BI.csv', sep=';', dtype={'Numero Operacion': str, 'Codigo Tipo Vinculo': str, 'Codigo Oficina': str, 'Numero Documento': str, 'Codigo Moneda': str})
+
+# Reemplazar el primer 0 en 'Codigo Oficina' por 'v'
+df['Codigo Oficina'] = df['Codigo Oficina'].apply(lambda x: re.sub(r'^0', 'v', x))
+
+# Crear la nueva columna concatenando los valores de las columnas
+df['Llave Concatenada'] = df['Codigo Oficina'] + df['Numero Operacion'] + df['Codigo Moneda']
+
+# Crear la columna Documento_Vinculo
+df['Documento_Vinculo'] = df['Numero Documento'] + '-' + df['Codigo Tipo Vinculo']
+
+# Agrupar los datos por 'Numero Operacion'
+grouped = df.groupby('Llave Concatenada').agg(
+    Cant_Vinculos=('Documento_Vinculo', 'count'),
+    Tipos_Vinculos=('Codigo Tipo Vinculo', lambda x: ', '.join(x.astype(str).unique())),
+    Nro_Documento=('Numero Documento', lambda x: ', '.join(x.astype(str).unique())),
+    Documento_Vinculo=('Numero Documento', lambda x: ', '.join((df.loc[x.index, 'Numero Documento'] + '_' + df.loc[x.index, 'Codigo Tipo Vinculo']).astype(str).unique()))
+).reset_index()
+
+# Renombrar columnas para que coincidan con las especificaciones
+grouped.columns = ['Numero Operacion', 'Cant. Vinculos', 'Tipos de Vinculos', 'Nro Documento', 'Documento_Tipo Vinculo']
+
+print(grouped)
+
+# Guardar el resultado en un nuevo archivo CSV
+grouped.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Vinculos_pasivo_agrupados_BI.csv', index=False, sep= ';')
