@@ -1,0 +1,36 @@
+import pandas as pd
+
+# Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';', dtype={'Cuota Pactada': str})
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+
+# Realizar el merge de los DataFrames
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+
+# Convertir las columnas Cuota Pactada a string antes de limpiar los datos
+merged['Cuota Pactada_df1'] = merged['Cuota Pactada_df1'].astype(str)
+merged['Cuota Pactada_df2'] = merged['Cuota Pactada_df2'].astype(str)
+
+# Eliminar comas, puntos y ceros ('0') después de las comas en la columna 'Cuota Pactada'
+merged['Cuota Pactada_df1'] = merged['Cuota Pactada_df1'].str.replace(',0', '', regex=False).str.replace('.0', '', regex=False)
+
+# Limpiar espacios en la columna 'Cuota Pactada'
+merged['Cuota Pactada_df1'] = merged['Cuota Pactada_df1'].str.strip()
+merged['Cuota Pactada_df2'] = merged['Cuota Pactada_df2'].str.strip()
+
+# Remover filas con valores vacíos en la columna 'Cuota Pactada'
+merged = merged[merged['Cuota Pactada_df1'] != '']
+merged = merged[merged['Cuota Pactada_df2'] != '']
+
+# Convertir la columna 'Cuota Pactada' a tipo entero
+merged['Cuota Pactada_df1'] = merged['Cuota Pactada_df1'].astype(int)
+merged['Cuota Pactada_df2'] = merged['Cuota Pactada_df2'].astype(int)
+
+# Identificar filas donde los valores de 'Cuota Pactada' son diferentes en los DataFrames
+diferencias_cuota_pactada = merged[merged['Cuota Pactada_df1'] != merged['Cuota Pactada_df2']]
+
+pd.set_option('display.max_columns', None)
+print(diferencias_cuota_pactada)
+
+# Exportar resultados a CSV
+diferencias_cuota_pactada.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_Cuota_Pactada.csv', index=False, sep=';')
