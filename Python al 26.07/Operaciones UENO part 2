@@ -1,0 +1,47 @@
+import pandas as pd
+
+# Ruta del archivo CSV
+ruta_archivo = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_part2.csv'
+
+# Leer el archivo CSV excluyendo las columnas 'Tipo Formulario' y 'Nro Registro'
+columnas_a_excluir = ['Tipo Formulario', 'Nro Registro']
+df = pd.read_csv(ruta_archivo, sep=';', dtype=str, index_col=False, usecols=lambda col: col not in columnas_a_excluir)
+
+# Limpiar los valores no numéricos en las columnas seleccionadas
+columnas_a_dividir = ['Monto Cap Original', 'Linea Credito', 'Monto Interes Original', 'Tasa Nominal']
+for columna in columnas_a_dividir:
+    df[columna] = pd.to_numeric(df[columna], errors='coerce')  # Convierte los no numéricos a NaN
+
+# Dividir las columnas específicas por 100
+df[columnas_a_dividir] = df[columnas_a_dividir].fillna(0) / 100
+
+# Crear un diccionario de reemplazo para la columna 'Id Region'
+diccionario_reemplazo = {'10  ': 1, '20  ': 2, '30  ': 3, '40  ': 4, '50  ': 5, '60  ': 6, '70  ': 7, '80  ': 8, '90  ': 9, 'A0  ': 10, 'B0  ': 11, 'C0  ': 12, 'D0  ': 13, 'E0  ': 14, 'F0  ': 15, 'G0  ': 16, 'H0  ': 17, 'Z0  ': 18}
+
+# Reemplazar los valores en la columna 'Id Region' según el diccionario de reemplazo
+df['Id Region'] = df['Id Region'].replace(diccionario_reemplazo)
+df['Id Region'] = df['Id Region'].astype(str)
+
+# Crear la nueva columna concatenando los valores de las columnas
+df['Llave Concatenada'] = df.apply(lambda row: f"{row['Codigo Oficina'].replace(' ', '')}{row['Tipo Operacion']}{row['Nro. Operacion'].replace(' ', '')}{row['Codigo Moneda']}", axis=1)
+
+# Eliminar espacios en blanco de las celdas de tipo cadena en todo el DataFrame
+df = df.applymap(lambda x: x.strip() if isinstance(x, str) else x)
+
+# Mostrar las primeras filas del DataFrame con la nueva columna
+pd.set_option('display.max_columns', None)
+print(df.head())
+print(df.shape)
+
+# Exportar el DataFrame a un archivo CSV
+df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', index=False, sep=';')
+
+# Verificar duplicados en la columna 'Llave Concatenada'
+duplicados = df[df.duplicated(subset='Llave Concatenada', keep=False)]
+
+# Mostrar los duplicados (si existen)
+if not duplicados.empty:
+    print("Se encontraron duplicados en la columna 'Llave Concatenada':")
+    print(duplicados)
+else:
+    print("No se encontraron duplicados en la columna 'Llave Concatenada'.")
