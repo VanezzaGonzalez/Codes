@@ -1,0 +1,37 @@
+import pandas as pd
+
+df_base = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\comunes_BI_OpegaranRCF.csv', sep=';', dtype={'Nro. Operacion_Opegaran': str, 'Operacion Sucursal Codigo': str, 'Garantia Sucursal Codigo': str})
+df_ueno = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\SolarOpeGaranModif.csv', sep=';', dtype={'Nro. Operacion': str, 'Sucursal': str, 'Sucursal Garantia': str})
+
+# Crear la columna 'Llave Concatenada' en ambos DataFrames
+df_base['Llave Concatenada'] = df_base['Nro. Operacion_Opegaran'] + df_base['Codigo Garantia'].astype(str) + df_base['Cod Tipo Operacion'].astype(str) + df_base['Operacion Moneda'].astype(str) + df_base['Garantia Moneda'].astype(str)
+df_ueno['Llave Concatenada'] = df_ueno['Nro. Operacion'] + df_ueno['Codigo Garantia'].astype(str) + df_ueno['Tipo Operacion'].astype(str) + df_ueno['Codigo Moneda'].astype(str) + df_ueno['Codigo Moneda Garantia'].astype(str)
+
+# Encontrar números de operación comunes
+common_operations = pd.merge(df_base, df_ueno, how='inner', on='Llave Concatenada', suffixes=('_base', '_ueno'))
+
+# Mostrar las filas comunes
+print("Operaciones Comunes:")
+print(common_operations)
+
+# Encontrar números de operación únicos en df_opegaran
+unique_in_base = df_base[~df_base['Llave Concatenada'].isin(df_ueno['Llave Concatenada'])]
+
+# Eliminar duplicados en unique_in_base después de la comparación
+unique_in_base = unique_in_base.drop_duplicates(subset=['Llave Concatenada'])
+
+# Mostrar los números de operación únicos en df_opegaran
+print("\nOperaciones Únicas en base:")
+print(unique_in_base)
+
+# Encontrar números de operación únicos en df_operaciones
+unique_in_ueno = df_ueno[~df_ueno['Llave Concatenada'].isin(df_base['Llave Concatenada'])]
+
+# Mostrar los números de operación únicos en df_operaciones
+print("\nOperaciones Únicas en ueno:")
+print(unique_in_ueno)
+
+# Exportar los resultados a archivos CSV
+common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Ueno_opegaran_comunes.csv', index=False, sep=';')
+unique_in_base.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Ueno_opegaran_unicas_en_base.csv', index=False, sep=';')
+unique_in_ueno.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Ueno_opegaran_unicas_en_ueno.csv', index=False, sep=';')
