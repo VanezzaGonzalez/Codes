@@ -1,0 +1,23 @@
+import pandas as pd
+
+df_Base = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\13 tanda\comunes_BI_OpegaranRCF.csv', sep=';', dtype={'Nro. Operacion_Opegaran': str})
+df_Ueno = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\13 tanda\UenoOpeGaranModif.csv', sep=';', dtype={'Nro. Operacion': str})
+
+# Crear la columna 'Llave Concatenada' en ambos DataFrames
+df_Base['Llave Concatenada'] = df_Base['Nro. Operacion_Opegaran'] + df_Base['Codigo Garantia'].astype(str) + df_Base['Operacion Sucursal Codigo'].astype(str) + df_Base['Cod Tipo Operacion'].astype(str) + df_Base['Operacion Moneda'].astype(str) + df_Base['Garantia Sucursal Codigo'].astype(str) + df_Base['Garantia Moneda'].astype(str)
+df_Ueno['Llave Concatenada'] = df_Ueno['Nro. Operacion'] + df_Ueno['Codigo Garantia'].astype(str) + df_Ueno['Sucursal'].astype(str) + df_Ueno['Tipo Operacion'].astype(str) + df_Ueno['Codigo Moneda'].astype(str) + df_Ueno['Sucursal Garantia'].astype(str) + df_Ueno['Codigo Moneda Garantia'].astype(str)
+
+# Encuentra las filas donde 'Desvinculado' es diferente basado en 'Llave Concatenada'
+merged = df_Base.merge(df_Ueno, on='Llave Concatenada', suffixes=('_Base', '_Ueno'))
+diferencias_garantia_especifica = merged[merged['Tipo Garantia_Base'] != merged['Tipo Garantia_Ueno']]
+
+# Filtrar las filas donde ambos 'Fecha Nacimiento' son NaN
+mask_both_nan = (diferencias_garantia_especifica['Garantia Especifica_Base'].isna()) & (diferencias_garantia_especifica['Garantia Especifica_Ueno'].isna())
+diferencias_garantia_especifica = diferencias_garantia_especifica[~mask_both_nan]
+
+# Imprimir las filas donde 'Fecha Nacimiento' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_garantia_especifica)
+
+# Exportar resultados a CSV
+diferencias_garantia_especifica.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\13 tanda\Diferencias_tipo_garantia_opegaran.csv', index=False, sep=';')
