@@ -1,0 +1,108 @@
+import os
+import pandas as pd
+
+# PRIMERA PARTE
+
+# Ruta del archivo CSV
+archivo_csv_1 = r"C:\Users\fgonzalez\Downloads\saldos (6).csv"
+
+# Verificar si el archivo existe
+if not os.path.exists(archivo_csv_1):
+    raise FileNotFoundError(f"El archivo {archivo_csv_1} no se encontró.")
+
+# Leer el archivo CSV en un DataFrame de pandas
+df1 = pd.read_csv(archivo_csv_1, delimiter=';', encoding='latin1', low_memory=False)
+
+# Limpiar las columnas 'Saldo Capital' y 'Saldo Interes Dev No Cob' y convertirlas a tipo float
+df1['Saldo Capital'] = df1['Saldo Capital'].str.replace('.', '', regex=True).str.replace(',', '.', regex=True).astype(float)
+df1['Saldo Interes Dev No Cob'] = df1['Saldo Interes Dev No Cob'].str.replace('.', '', regex=True).str.replace(',', '.', regex=True).astype(float)
+
+# Redondear las columnas 'Saldo Capital' y 'Saldo Interes Dev No Cob' a 2 dígitos decimales
+df1['Saldo Capital'] = df1['Saldo Capital'].round(2)
+df1['Saldo Interes Dev No Cob'] = df1['Saldo Interes Dev No Cob'].round(2)
+
+# Verificar que los datos se redondearon correctamente
+print(df1[['Saldo Capital', 'Saldo Interes Dev No Cob']].head())
+
+# Crear las columnas "Cuenta" y "SubCuenta" separando el valor de "Cod Cuenta Cap"
+df1['Cuenta'] = df1['Cod Cuenta Cap'].astype(str).str.slice(5, 8)
+df1['SubCuenta'] = df1['Cod Cuenta Cap'].astype(str).str.slice(9, 11)
+
+# Filtrar el DataFrame por 'Tipo Vinculo'
+tipos_vinculo = ['CODEUDOR', 'COGARANTE', 'COMPRA DE CARTERA CON RECURSO', 'CONYUGE', 'EMISOR', 'GARANTE']
+df1_filtrado = df1[df1['Tipo vinculo'].isin(tipos_vinculo)]
+
+# Filtrar el DataFrame por 'Cuenta' y 'SubCuenta'
+deuda_cuentas = [
+    '417', '419', '433', '141', '169', '171', '173', '175', '177', '179', '181', '183', '185', '187', '189', '191', '193', '195', '197', '199',
+    '201', '203', '205', '207', '209', '211', '213', '215', '217', '219', '221', '223', '251', '265', '267', '269', '271', '273', '275', '351',
+    '369', '371', '373', '375', '377', '381', '383', '385', '387', '397', '405', '143', '441', '443', '449'
+]
+deuda_subcuentas = [
+    '133012', '137012', '131012', '139012', '135024', '135026', '135012', '137024', '137026', '139024',
+    '133024', '133026', '131024', '139026', '131026'
+]
+
+# Convertir deuda_cuentas y deuda_subcuentas a sets para mejorar el rendimiento de búsqueda
+deuda_cuentas_set = set(deuda_cuentas)
+deuda_subcuentas_set = set(deuda_subcuentas)
+
+# Filtrar el DataFrame
+df1_deuda = df1_filtrado[
+    (df1_filtrado['Cuenta'].isin(deuda_cuentas_set)) |
+    (df1_filtrado['Cuenta'] + df1_filtrado['SubCuenta']).isin(deuda_subcuentas_set)
+].copy()
+
+# Agregar el filtro adicional donde Desvinculado = 'N'
+df1_deuda = df1_deuda[df1_deuda['Desvinculado'] == 'N']
+
+# Crear una nueva columna 'Saldo Total' que es la suma de 'Saldo Capital' y 'Saldo Interes Dev No Cob'
+df1_deuda['Saldo Total'] = df1_deuda['Saldo Capital'] + df1_deuda['Saldo Interes Dev No Cob']
+
+# Redondear la columna 'Saldo Total' a 2 dígitos decimales
+df1_deuda['Saldo Total'] = df1_deuda['Saldo Total'].round(2)
+
+# Agrupar por 'Nro. Documento' y sumar los valores de 'Saldo Total'
+deuda_saldos_agrupados = df1_deuda.groupby('Nro documento')['Saldo Total'].sum().reset_index()
+
+# Renombrar la columna 'Nro documento' a 'Nro. Documento'
+deuda_saldos_agrupados = deuda_saldos_agrupados.rename(columns={'Nro documento': 'Nro. Documento'})
+
+# Verificar el resultado final
+print(deuda_saldos_agrupados.head())
+
+# SEGUNDA PARTE
+
+# Ruta del segundo archivo CSV
+archivo_csv_2 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica.csv'
+
+# Verificar si el archivo existe
+if not os.path.exists(archivo_csv_2):
+    raise FileNotFoundError(f"El archivo {archivo_csv_2} no se encontró.")
+
+# Leer el segundo archivo CSV
+df2 = pd.read_csv(archivo_csv_2, delimiter=';', encoding='latin1')
+
+# Seleccionar un subconjunto de las columnas necesarias
+df2_subset = df2[['Nro. Documento', 'SR']].copy()
+
+# Limpiar y convertir las columnas adecuadas
+df2_subset['Nro. Documento'] = df2_subset['Nro. Documento'].str.strip()
+df2_subset['SR'] = df2_subset['SR'].astype(str).str.replace(',', '.').astype(float)
+
+# Dividir la columna 'SR' por 100 y redondear a 2 dígitos decimales
+df2_subset['SR'] = (df2_subset['SR'] / 100).round(2)
+
+# Unir los dos DataFrames en la columna 'Nro. Documento'
+df_final = pd.merge(deuda_saldos_agrupados, df2_subset, on='Nro. Documento', how='left')
+
+# Crear la columna 'Diferencia' que es la resta de 'SR' y 'Saldo Total'
+df_final['Diferencia'] = df_final['SR'] - df_final['Saldo Total']
+
+# Redondear la columna 'Diferencia' a 2 dígitos decimales
+df_final['Diferencia'] = df_final['Diferencia'].round(2)
+
+# Verificar el resultado final
+print(df_final.head())
+
+df_final.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion Saldos vs Clasifica Codeudoria.csv', index=False, sep=';')
