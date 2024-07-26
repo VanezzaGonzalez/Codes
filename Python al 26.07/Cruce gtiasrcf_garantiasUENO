@@ -1,0 +1,37 @@
+import pandas as pd
+
+# Leer los DataFrames
+df_left = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\11 tanda\garantias_vigentes.csv', sep=';')
+df_right = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\11 tanda\UenoGarantias.csv', sep=';')
+
+df_left = df_left.rename(columns={'Codigo Garantia_opegaran': 'Codigo Garantia'})
+
+# Convertir la columna 'Codigo Garantia' a tipo object
+df_left['Codigo Garantia'] = df_left['Codigo Garantia'].astype('str')
+df_right['Codigo Garantia'] = df_right['Codigo Garantia'].astype('str')
+
+merged = df_left.merge(df_right, on='Codigo Garantia', how='outer', suffixes=('_modif', '_original'), indicator=True)
+
+# Filtrar para obtener las garantías comunes
+common_garantias = merged[merged['_merge'] == 'both']
+
+# Filtrar para obtener las garantías solo en left
+only_in_left = merged[merged['_merge'] == 'left_only']
+
+# Filtrar para obtener las garantías solo en right
+only_in_right = merged[merged['_merge'] == 'right_only']
+
+# Mostrar las garantías comunes
+print("Garantías Comunes:")
+print(common_garantias)
+
+# Mostrar las garantías solo en left
+print("\nGarantías Solo en Left:")
+print(only_in_left)
+
+# Mostrar las garantías solo en right
+print("\nGarantías Solo en Right:")
+print(only_in_right)
+
+# Exportar el DataFrame a un archivo CSV
+only_in_right.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\11 tanda\garantias_Solo_UENO.csv', index=False, sep=';')
