@@ -1,0 +1,38 @@
+import pandas as pd
+
+# Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';', dtype={'Cta Cap Original': str})
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+
+def get_op_cod_cuenta(campo):
+    if not campo or (isinstance(campo, int) and campo == 0):
+        return ""
+    campo_str = str(campo)
+    sector = campo_str[0] if len(campo_str) > 0 else '0'
+    capitulo = campo_str[1] if len(campo_str) > 1 else '0'
+    plazo = campo_str[2] if len(campo_str) > 2 else '0'
+    grupo = campo_str[3] if len(campo_str) > 3 else '0'
+    riesgo = campo_str[4] if len(campo_str) > 4 else '0'
+    cta = campo_str[5:8].zfill(3)
+    plazo2 = campo_str[8] if len(campo_str) > 8 else '0'
+    sub_cta = campo_str[9:11].zfill(2)
+    return str(sector + '0' + capitulo + '0' + grupo + '0' + cta + '0' + sub_cta + '00' + plazo + '00' + riesgo)
+
+# Aplicar la función get_op_cod_cuenta a la columna 'Cta Cap Original' en df2
+df2["Cta Cap Original"] = df2["Cta Cap Original"].apply(get_op_cod_cuenta).astype(str)
+
+# Realizar el merge de los DataFrames
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+
+# Extraer los números de las posiciones indicadas y agregar una nueva columna
+merged['Numeros_df1'] = merged['Cta Cap Original_df1'].apply(lambda x: x[6:9] + x[10:12] if x else '0').astype(str)
+merged['Numeros_df2'] = merged['Cta Cap Original_df2'].apply(lambda x: x[6:9] + x[10:12] if x else '0').astype(str)
+
+# Identificar filas donde los valores de 'Numeros' son diferentes en los DataFrames
+diferencias_numeros = merged[merged['Numeros_df1'] != merged['Numeros_df2']]
+
+pd.set_option('display.max_columns', None)
+print(diferencias_numeros)
+
+# Exportar a CSV
+diferencias_numeros.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_cta_cap_orig2.csv', index=False, sep=';')
