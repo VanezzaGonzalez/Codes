@@ -1,0 +1,31 @@
+import pandas as pd
+
+# Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+
+# Convertir la columna 'Id Region' a tipo cadena (string)
+df1['Monto Interes Original'] = df1['Monto Interes Original'].astype(str)
+df2['Monto Interes Original'] = df2['Monto Interes Original'].astype(str)
+
+# Limpiar espacios en las columnas 'Id Region'
+df1['Monto Interes Original'] = df1['Monto Interes Original'].str.strip()
+df2['Monto Interes Original'] = df2['Monto Interes Original'].str.strip()
+
+# Reemplazar puntos por comas en la columna 'Tasa Nominal' del df2
+df2['Monto Interes Original'] = df2['Monto Interes Original'].str.replace('.', ',', regex=False)
+
+# Encuentra las filas donde 'Id Region' es diferente basado en 'Llave Concatenada'
+merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
+diferencias_montoint = merged[merged['Monto Interes Original_df1'] != merged['Monto Interes Original_df2']]
+
+# Filtrar las filas donde ambos 'Id Region' son NaN
+mask_both_nan = (diferencias_montoint['Monto Interes Original_df1'].isna()) & (diferencias_montoint['Monto Interes Original_df2'].isna())
+diferencias_montoint = diferencias_montoint[~mask_both_nan]
+
+# Imprimir las filas donde 'Id Region' es diferente
+pd.set_option('display.max_columns', None)
+print(diferencias_montoint)
+
+# Exportar a CSV
+diferencias_montoint.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_montoint.csv', index=False, sep=';')
