@@ -1,0 +1,56 @@
+import pandas as pd
+
+#Leer el archivo CSV
+archivo_entrada = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\garantías.csv'
+
+# Leer el archivo CSV excluyendo las columnas 'Tipo Formulario' y 'Numero Registro'
+columnas_a_excluir = ['Codigo', 'Entidad']
+datos = pd.read_csv(archivo_entrada, sep=';', dtype=str, encoding= 'ANSI', index_col=False, usecols=lambda col: col not in columnas_a_excluir)
+
+# Supongamos que 'datos' es tu DataFrame
+columnas_a_reemplazar = ['Fecha Garantia', 'Fecha Vencimiento Garantia', 'Fecha Tasacion', 'Fecha Vencimiento Tasacion', 'Fecha Seguro', 'Fecha Vencimiento Seguro']
+
+# Reemplazar '-' con espacio en blanco en las columnas seleccionadas
+datos[columnas_a_reemplazar] = datos[columnas_a_reemplazar].replace('-', ' ')
+
+# Convertir las fechas a formato deseado, considerando ' ' como fecha válida
+for columna in columnas_a_reemplazar:
+    datos[columna] = datos[columna].apply(lambda x: pd.to_datetime(x, format='%d/%m/%Y') if x != ' ' else pd.Timestamp('NaT'))
+
+# Formatear las fechas en el nuevo formato deseado
+datos[columnas_a_reemplazar] = datos[columnas_a_reemplazar].apply(lambda x: x.dt.strftime('%Y%m%d') if not x.isnull().all() else ' ')
+
+# Crear un diccionario de reemplazo para la columna 'Tipo Garantia'
+diccionario_reemplazo = {'HIPOTECARIAS': 1, 'PRENDAS SOBRE MAQUINARIA INDUSTRIAL O AGRICOLA Y AUTOMOVILES': 2, 'PRENDA SOBRE GANADO VACUNO CON REGISTRO DE MARCA': 3, '(WARRANTS) SOBRE GRANOS Y CEREALES': 4, '(WARRANTS) SOBRE FIBRA DE ALGODON': 5, '(WARRANTS) OTROS PRODUCTOS': 6, 'CERTIFICADOS DE OBRA FIRMADOS POR EL INTENDENTE Y EL SECRETARIO MUNICIPAL CON SELLO AUTENTICADOR': 7, 'CERTIFICADOS DE DEPOSITO DE AHORRO A FAVOR DE LA INSTITUCION': 8, 'CASH COLLATERAL': 9, 'CARTAS DE CREDITO STANDBY': 10, 'OTRAS GARANTIAS BANCARIAS': 11, 'GARANTIAS EN FIDEICOMISO': 12, 'PRENDA DE MERCADERIAS SIN DESPLAZAMIENTO': 13, 'OTRAS GARANTIAS EN EL PAIS': 14, 'OTRAS GARANTIAS EN EL EXTERIOR': 15, 'GARANTIAS EMITIDAS POR FOGAPY': 16, 'PRENDA - DERECHO REAL DE SUPERFICIE FORESTAL': 17}
+
+# Reemplazar los valores en la columna 'Tipo Garantia' según el diccionario de reemplazo
+datos['Tipo Garantia'] = datos['Tipo Garantia'].replace(diccionario_reemplazo)
+
+# Crear un diccionario de reemplazo para la columna 'Rango Garantia'
+diccionario_reemplazo_2 = {'PRIMER RANGO': 1, 'SEGUNDO RANGO': 2}
+
+# Reemplazar los valores en la columna 'Tipo Garantia' según el diccionario de reemplazo
+datos['Rango Garantia'] = datos['Rango Garantia'].replace(diccionario_reemplazo_2)
+
+# Renombrar columnas
+datos.rename(columns={
+    'Numero Garantia': 'Codigo Garantia',
+}, inplace=True)
+
+# Orden de columnas deseado
+orden_columnas = [
+    'Codigo Garantia', 'Tipo Garantia', 'Numero Registro Publico', 'Rango Garantia', 'Fecha Garantia', 'Fecha Vencimiento Garantia', 'Monto Garantia',
+    'Fecha Tasacion', 'Fecha Vencimiento Tasacion', 'Monto Tasacion Asegurable', 'Monto Tasacion No Asegurable',
+    'Fecha Seguro', 'Fecha Vencimiento Seguro', 'Moneda Seguro', 'Monto Asegurado', 'Garantia Especifica', 'Garantia Perfeccionada'
+]
+
+# Reordenar las columnas del DataFrame
+datos = datos[orden_columnas + [col for col in datos.columns if col not in orden_columnas]]
+
+
+#Mostrar DataFrame con nueva columna de concatenación
+pd.set_option('display.max_columns', None)
+print(datos)
+
+# Exportar el DataFrame a un archivo CSV
+datos.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\UenoGarantiasModif.csv', index=False, sep=';')
