@@ -103,3 +103,4 @@ df_discrepancias.to_csv(archivo_discrepancias, index=False, sep=';')
 # Verificar el DataFrame de discrepancias
 pd.set_option('display.max_columns', None)
 print(df_discrepancias)
+
