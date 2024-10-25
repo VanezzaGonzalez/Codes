@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 # Ruta del archivo de texto y el archivo CSV de salida
-archivo_txt = r'C:\Users\fgonzalez\Downloads\ES-1003 (1).DAT'
+archivo_txt = r'C:\Users\fgonzalez\Downloads\ES-1046 (2).DAT'
 archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\ES_Planinfo_prueba.csv'
 
 # Función para insertar punto y coma en posiciones específicas en una cadena
@@ -109,7 +109,7 @@ print(df)
 df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\planinfomodic.csv', index=False, sep=';')
 
 # Leer el archivo CSV previamente modificado
-archivo_csv_modificado = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\planinfomodic.csv'
+archivo_csv_modificado = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\22 tanda\planinfomodic.csv'
 df = pd.read_csv(archivo_csv_modificado, delimiter=';', index_col=False)
 
 # Filtrar las filas donde Moneda sea EXTRANJERA o NACIONAL
