@@ -21,3 +21,4 @@ print(df_subset)
 
 # Exportar el DataFrame a un archivo CSV
 df_subset.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion Clasifica Codeudoria.csv', index=False, sep=';')
+
