@@ -1,0 +1,39 @@
+import pandas as pd
+
+# Cargar los dos archivos en DataFrames
+archivo_anterior = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica082024.csv', encoding='ansi', delimiter=';')
+archivo_reciente = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica092024.csv', encoding= 'ansi', delimiter= ';')
+
+# Asegurarse de que 'Nro. Documento' sea tipo string en ambos archivos
+archivo_anterior['Nro. Documento'] = archivo_anterior['Nro. Documento'].astype(str)
+archivo_reciente['Nro. Documento'] = archivo_reciente['Nro. Documento'].astype(str)
+
+# Eliminar espacios en blanco en 'Nro. Documento'
+archivo_anterior['Nro. Documento'] = archivo_anterior['Nro. Documento'].str.strip()
+archivo_reciente['Nro. Documento'] = archivo_reciente['Nro. Documento'].str.strip()
+
+archivo_anterior['Clasificacion (objetiva)'] = archivo_anterior['Clasificacion (objetiva)'].astype(str)
+archivo_reciente['Clasificacion (objetiva)'] = archivo_reciente['Clasificacion (objetiva)'].astype(str)
+
+# Filtrar los registros que están solo en el archivo reciente (nuevos documentos)
+nuevos_registros = archivo_reciente[
+    ~archivo_reciente['Nro. Documento'].isin(archivo_anterior['Nro. Documento'])
+]
+
+print(nuevos_registros)
+nuevos_registros.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\resultados_clientes.csv', index=False, sep=';', encoding= 'ANSI')
+
+# Filtrar registros donde 'Clasificacion (objetiva)' no sea '1' (como str)
+nuevos_filtrados = nuevos_registros[nuevos_registros['Clasificacion (objetiva)'] != '1 ']
+
+# Mostrar los registros filtrados
+print("Registros filtrados:")
+pd.set_option('display.max_columns', None)
+print(nuevos_filtrados)
+
+# Verificar los valores únicos en 'Clasificacion (objetiva)' después de convertir a string
+print("Valores únicos en 'Clasificacion (objetiva)':")
+print(nuevos_filtrados['Clasificacion (objetiva)'].unique())
+
+# Guardar los resultados en un nuevo archivo CSV
+nuevos_filtrados.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\resultados_clientes_nuevos.csv', index=False, sep=';', encoding= 'ansi')
