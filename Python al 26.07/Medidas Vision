@@ -1,0 +1,20 @@
+import pandas as pd
+
+# Lee el archivo Excel
+df = pd.read_excel(r'C:\Users\fgonzalez\Downloads\Medidas Agro Vision v3 (6).xlsx')
+
+# Convierte la columna 'Año Mes' a datetime para poder comparar fechas
+df['Año Mes'] = pd.to_datetime(df['Año Mes'], format='%Y/%m')
+
+# Ordena el DataFrame por 'Numero Operacion' y 'Año Mes' de forma descendente
+df.sort_values(by=['Numero Operacion', 'Año Mes'], ascending=[True, False], inplace=True)
+
+# Elimina duplicados manteniendo el primero, que será el valor máximo de 'Año Mes'
+df.drop_duplicates(subset='Numero Operacion', keep='first', inplace=True)
+
+# Muestra el DataFrame resultante
+pd.set_option('display.max_columns', None)
+print(df)
+
+# Exporta el DataFrame resultante a un nuevo archivo Excel
+df.to_excel(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\resultadov3.xlsx', index=False)
