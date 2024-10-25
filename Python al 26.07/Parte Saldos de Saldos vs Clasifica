@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Ruta del archivo CSV
-archivo_csv = r"E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos.csv"
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos_Consolidado.csv'
 
 # Leer el archivo CSV en un DataFrame de pandas
 df = pd.read_csv(archivo_csv, delimiter=';', encoding='latin1')
@@ -13,7 +13,7 @@ df['Cuenta + SubCuenta'] = df['Cuenta'].astype(str) + df['SubCuenta'].astype(str
 deuda_cuentas = [
     417, 419, 433, 141, 169, 171, 173, 175, 177, 179, 181, 183, 185, 187, 189, 191, 193, 195, 197, 199,
     201, 203, 205, 207, 209, 211, 213, 215, 217, 219, 221, 223, 251, 265, 267, 269, 271, 273, 275, 351,
-    369, 371, 373, 375, 377, 381, 383, 385, 387, 397, 405, 143, 441, 443, 449
+    369, 371, 373, 375, 377, 381, 383, 385, 387, 397, 405, 143, 441, 443, 449, 453
 ]
 deuda_subcuentas = [
     '13312', '13712', '13112', '13912', '13524', '13526', '13512', '13724', '13726', '13924',
