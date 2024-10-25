@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
-df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';')
-df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\OperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Operaciones_Ueno_BI.csv', sep=';')
 
 # Convertir la columna 'Id Region' a tipo cadena (string)
 df1['Tasa Nominal'] = df1['Tasa Nominal'].astype(str)
@@ -28,4 +28,4 @@ pd.set_option('display.max_columns', None)
 print(diferencias_tasa)
 
 # Exportar a CSV
-diferencias_tasa.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_tasa.csv', index=False, sep=';')
+diferencias_tasa.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Diferencias_tasa.csv', index=False, sep=';')
