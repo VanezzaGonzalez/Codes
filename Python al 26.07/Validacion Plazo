@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
-df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';')
-df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\OperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Operaciones_Ueno_BI.csv', sep=';')
 
 # Realizar el merge de los DataFrames
 merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
@@ -34,4 +34,4 @@ pd.set_option('display.max_columns', None)
 print(diferencias_plazo)
 
 # Exportar resultados a CSV
-diferencias_plazo.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_plazo.csv', index=False, sep=';')
+diferencias_plazo.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Diferencias_plazo.csv', index=False, sep=';')
