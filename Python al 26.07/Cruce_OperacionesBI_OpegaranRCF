@@ -36,3 +36,4 @@ print(unique_in_operaciones)
 
 # Exportar el DataFrame a un archivo CSV
 common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\comunes_BI_OpegaranRCF.csv', index=False, sep=';')
+
