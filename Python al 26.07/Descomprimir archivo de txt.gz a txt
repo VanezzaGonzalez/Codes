@@ -1,0 +1,15 @@
+import gzip
+import shutil
+
+# Ruta del archivo comprimido .gz
+archivo_gz = r'C:\Users\fgonzalez\Downloads\927362_CRC03-1046-20240930.txt.gz'
+
+# Ruta del archivo descomprimido .txt
+archivo_txt = r'C:\Users\fgonzalez\Downloads\CRC03-1046-20240630 (1).txt'
+
+# Descomprimir el archivo .gz y guardarlo como .txt
+with gzip.open(archivo_gz, 'rb') as archivo_comprimido:
+    with open(archivo_txt, 'wb') as archivo_descomprimido:
+        shutil.copyfileobj(archivo_comprimido, archivo_descomprimido)
+
+print(f"Archivo descomprimido guardado como: {archivo_txt}")
