@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Ruta del archivo CSV
-ruta_archivo = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\Ueno_Vinculos.csv'
+ruta_archivo = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\24 tanda\Ueno_Vinculos.csv'
 
 # Leer el archivo CSV excluyendo las columnas 'Tipo Formulario' y 'Numero Registro'
 columnas_a_excluir = ['Tipo Formulario', 'Numero Registro']
@@ -22,4 +22,4 @@ print(df.head())
 print(df.shape)
 
 # Exportar el DataFrame a un archivo CSV
-df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\UenoVinculosModif.csv', index=False, sep=';')
+df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\24 tanda\UenoVinculosModif.csv', index=False, sep=';')
