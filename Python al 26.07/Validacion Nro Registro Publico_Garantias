@@ -55,3 +55,4 @@ print(diferencias_Registro_Publico)
 
 # Exportar el DataFrame a un archivo CSV
 diferencias_Registro_Publico.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\diferencias_nro registro pub.csv', index=False, sep=';')
+
