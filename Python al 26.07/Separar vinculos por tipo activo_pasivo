@@ -1,14 +1,14 @@
 import pandas as pd
 
 # Leer el archivo TXT
-df = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\UenoVinculosModif.csv', sep=';', dtype={'Codigo Oficina': str})  # Ajusta el delimitador según sea necesario
+df = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\27 tanda\_Saldos_Consolidado.csv', sep=';', dtype={'Codigo Oficina': str})  # Ajusta el delimitador según sea necesario
 
 # Filtrar las filas
-archivo1 = df[df['Codigo Tipo Operacion'] == 453]
-archivo2 = df[df['Codigo Tipo Operacion'] % 2 == 0]
-archivo3 = df[(df['Codigo Tipo Operacion'] % 2 != 0) & (df['Codigo Tipo Operacion'] != 453)]
+archivo1 = df[df['Tipo Operacion'] == 453]
+archivo2 = df[df['Tipo Operacion'] % 2 == 0]
+archivo3 = df[(df['Tipo Operacion'] % 2 != 0) & (df['Tipo Operacion'] != 453)]
 
 # Guardar en archivos CSV
-archivo1.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\Vinculos_Facilidades_Ueno.csv', index=False, sep=';')
-archivo2.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\Vinculos_pasivo_Ueno.csv', index=False, sep=';')
-archivo3.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\Vinculos_activo_Ueno.csv', index=False, sep=';')
+archivo1.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\27 tanda\Saldos_Facilidades_Consolidado.csv', index=False, sep=';')
+archivo2.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\27 tanda\Saldos_pasivo_Consolidado.csv', index=False, sep=';')
+archivo3.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\27 tanda\Saldos_activo_Consoldiado.csv', index=False, sep=';')
