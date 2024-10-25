@@ -3,8 +3,8 @@ import os
 
 
 # Ruta del archivo de texto y el archivo CSV de salida
-archivo_txt = r"C:\Users\fgonzalez\Downloads\CRC03-1039-20240630 (1).txt"
-archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos.csv'
+archivo_txt = r'C:\Users\fgonzalez\Downloads\926817_CRC03-1017-20240930.txt'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos_Consolidado.csv'
 
 # Función para insertar punto y coma en posiciones específicas en una cadena
 def insertar_punto_y_coma(cadena, posiciones):
