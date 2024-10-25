@@ -2,8 +2,8 @@ import csv
 import pandas as pd
 
 # Ruta del archivo de texto y el archivo CSV de salida
-archivo_txt = r"C:\Users\fgonzalez\Downloads\CRC06-1039-20240630 (1).txt"
-archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica.csv'
+archivo_txt = r'C:\Users\fgonzalez\Downloads\926903_CRC06-1008-20240930.txt'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Clasifica092024.csv'
 
 
 # Función para insertar punto y coma en posiciones específicas en una cadena
@@ -28,7 +28,7 @@ nombres_columnas = [
 
 
 # Leer el archivo de texto y conviértelo a un archivo CSV con punto y coma en posiciones específicas
-with open(archivo_txt, 'r') as txtfile, open(archivo_csv, 'w', newline='') as csvfile:
+with open(archivo_txt, 'r', encoding= 'ansi', errors= 'replace') as txtfile, open(archivo_csv, 'w', newline='', encoding= 'ansi', errors= 'replace') as csvfile:
     writer = csv.writer(csvfile, delimiter=';')
 
     # Saltar la primera línea del archivo de texto
@@ -50,3 +50,6 @@ with open(archivo_txt, 'r') as txtfile, open(archivo_csv, 'w', newline='') as cs
 
         # Escribir la línea como una lista de strings
         writer.writerow(lista_datos)
+
+
+
