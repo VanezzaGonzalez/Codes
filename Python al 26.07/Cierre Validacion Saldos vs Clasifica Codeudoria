@@ -106,3 +106,5 @@ df_final['Diferencia'] = df_final['Diferencia'].round(2)
 print(df_final.head())
 
 df_final.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion Saldos vs Clasifica Codeudoria.csv', index=False, sep=';')
+
+
