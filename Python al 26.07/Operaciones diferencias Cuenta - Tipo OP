@@ -104,3 +104,4 @@ print(df_diferencias)
 
 # Guardar el nuevo DataFrame en un archivo CSV si lo deseas
 df_diferencias.to_csv(archivo_modif, index=False, sep=';')
+
