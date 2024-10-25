@@ -1,0 +1,20 @@
+import pandas as pd
+
+archivo_1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2016_T1.csv'
+archivo_2 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2016_T2.csv'
+archivo_3 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2016_T3.csv'
+
+dtype_dict = {'Numero Operacion': str, 'Numero Documento': str, 'Codigo Tipo Riesgo': str}
+
+df_1 = pd.read_csv(archivo_1, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_2 = pd.read_csv(archivo_2, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_3 = pd.read_csv(archivo_2, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+
+df_concatenado = pd.concat([df_1, df_2], axis=0)
+
+ruta_salida_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2016_C1.csv'
+
+df_concatenado.to_csv(ruta_salida_csv, sep= ';', index=False)
+print(df_concatenado.shape)
+pd.set_option('display.max_columns', None)
+print(df_concatenado.head())
