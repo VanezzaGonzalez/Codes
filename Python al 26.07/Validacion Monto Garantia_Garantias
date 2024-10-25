@@ -65,3 +65,4 @@ print(diferencias_monto_gtia)
 
 # Exportar el DataFrame a un archivo CSV
 diferencias_monto_gtia.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\diferencias_monto_gtia.csv', index=False, sep=';')
+
