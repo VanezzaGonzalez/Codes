@@ -1,5 +1,5 @@
 # Ruta del archivo de texto
-archivo_txt = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\CRC02-1046-20240310 (1).txt'
+archivo_txt = r'C:\Users\fgonzalez\Downloads\926903_CRC06-1008-20240930.txt'
 
 # Leer el archivo de texto y verificar cada carácter
 with open(archivo_txt, 'r', encoding='ANSI') as txtfile:
