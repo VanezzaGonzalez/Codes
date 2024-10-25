@@ -44,3 +44,4 @@ pd.set_option('display.max_columns', None)
 print(datos)
 
 datos.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Ueno_Opegaran_RCF.csv', index=False, sep=';')
+
