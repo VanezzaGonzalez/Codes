@@ -2,7 +2,7 @@ import pandas as pd
 import re
 
 # Rutas de los archivos CSV
-archivo_1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Vinculos UENO.csv'
+archivo_1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\24 tanda\Vinculos UENO.csv'
 
 
 df_1 = pd.read_csv(archivo_1, delimiter=';', encoding='utf-8', dtype=str)
@@ -29,4 +29,4 @@ df_concatenado['Llave Concatenada'] = df_concatenado['Llave Concatenada'].str.re
 pd.set_option('display.max_columns', None)
 print(df_concatenado.head())
 
-df_concatenado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Vinculos_Ueno_BI.csv', index=False, sep=';')
+df_concatenado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\24 tanda\Vinculos_Ueno_BI.csv', index=False, sep=';')
