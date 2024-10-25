@@ -2,9 +2,9 @@ import pandas as pd
 import os
 
 # Ruta del archivo de texto y el archivo CSV de salida
-archivo_txt = r"C:\Users\fgonzalez\Downloads\901816_CRC03-1003-20240628.txt"
-archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos.csv'
-archivo_modif = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos_modif.csv'
+archivo_txt = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\22 tanda\CRC03-1046-20240630.txt'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\22 tanda\_Saldos.csv'
+archivo_modif = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\22 tanda\_Saldos_modif.csv'
 
 # Función para insertar punto y coma en posiciones específicas en una cadena
 def insertar_punto_y_coma(cadena, posiciones):
@@ -139,4 +139,4 @@ df_resultado['Suma'] = df_resultado['Suma'].apply(lambda x: x / 100)
 print("DataFrame resultado:")
 print(df_resultado)
 
-df_resultado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\suma.csv', index=False, sep=';')
+df_resultado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\22 tanda\suma.csv', index=False, sep=';')
