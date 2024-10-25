@@ -20,3 +20,4 @@ diferencias_codigo_vinculo = diferencias_codigo_vinculo[~mask_both_nan]
 
 # Mostrar las filas donde 'Codigo Tipo Vinculo' es diferente
 print(diferencias_codigo_vinculo)
+
