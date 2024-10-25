@@ -28,3 +28,4 @@ print(grouped)
 
 # Guardar el resultado en un nuevo archivo CSV
 grouped.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Vinculos_pasivo_agrupados_BI.csv', index=False, sep= ';')
+
