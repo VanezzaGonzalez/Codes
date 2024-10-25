@@ -53,3 +53,4 @@ with open(archivo_txt, 'r') as txtfile, open(archivo_csv, 'w', newline='') as cs
 df = pd.read_csv(archivo_csv, delimiter=';', index_col=False)
 pd.set_option('display.max_columns', None)
 print(df)
+
