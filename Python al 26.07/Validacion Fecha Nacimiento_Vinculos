@@ -17,3 +17,4 @@ print(diferencias_fecha_nacimiento)
 
 # Exportar resultados a CSV
 diferencias_fecha_nacimiento.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Diferencias_fecha_nacimiento_vinculos.csv', index=False, sep=';')
+
