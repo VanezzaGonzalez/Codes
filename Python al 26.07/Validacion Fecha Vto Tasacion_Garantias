@@ -55,3 +55,4 @@ print(diferencias_fecha_vto_tasacion)
 
 # Exportar el DataFrame a un archivo CSV
 diferencias_fecha_vto_tasacion.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\diferencias_fecha_vto_tasacion.csv', index=False, sep=';')
+
