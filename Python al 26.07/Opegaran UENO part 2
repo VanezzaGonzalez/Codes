@@ -21,3 +21,4 @@ print(df.shape)
 
 # Exportar el DataFrame a un archivo CSV
 df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\UenoOpeGaranModif.csv', index=False, sep=';')
+
