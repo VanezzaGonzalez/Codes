@@ -50,3 +50,4 @@ print(deuda_saldos_agrupados)
 
 # Exportar el DataFrame a un archivo CSV
 deuda_saldos_agrupados.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion saldos Codeudoria.csv', index=False, sep=';')
+
