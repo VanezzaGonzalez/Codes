@@ -57,3 +57,4 @@ df_combined.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane
 # Mostrar el DataFrame combinado para verificación
 print("\nDataFrame combinado:")
 print(df_combined.head())
+
