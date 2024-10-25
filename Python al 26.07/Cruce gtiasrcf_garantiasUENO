@@ -35,3 +35,4 @@ print(only_in_right)
 
 # Exportar el DataFrame a un archivo CSV
 only_in_right.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\11 tanda\garantias_Solo_UENO.csv', index=False, sep=';')
+
