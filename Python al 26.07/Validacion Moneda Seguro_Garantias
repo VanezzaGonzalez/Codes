@@ -51,3 +51,4 @@ print(diferencias_moneda_seguro)
 
 # Exportar el DataFrame a un archivo CSV
 diferencias_moneda_seguro.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\diferencias_moneda_seguro.csv', index=False, sep=';')
+
