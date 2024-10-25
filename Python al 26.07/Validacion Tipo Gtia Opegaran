@@ -21,3 +21,4 @@ print(diferencias_garantia_especifica)
 
 # Exportar resultados a CSV
 diferencias_garantia_especifica.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\13 tanda\Diferencias_tipo_garantia_opegaran.csv', index=False, sep=';')
+
