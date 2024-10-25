@@ -2,8 +2,8 @@ import csv
 import pandas as pd
 
 # Ruta del archivo de texto y el archivo CSV de salida
-archivo_txt = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\CRC04-1046-20240331.txt'
-archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Ueno_Garantias.csv'
+archivo_txt = r'C:\Users\fgonzalez\Downloads\920409_CRC04-1017-20240910.txt'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Ueno_Garantias.csv'
 
 # Función para insertar punto y coma en posiciones específicas en una cadena
 def insertar_punto_y_coma(cadena, posiciones):
