@@ -40,3 +40,5 @@ print(df_fusionado)
 
 # Exportar el DataFrame a un archivo CSV
 df_fusionado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Validacion SVC.csv', index=False, sep=';')
+
+
