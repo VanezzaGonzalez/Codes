@@ -1,0 +1,238 @@
+import pandas as pd
+
+# Rutas de los archivos CSV
+archivo_1 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1002.csv'
+archivo_2 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1003.csv'
+archivo_3 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1004.csv'
+archivo_4 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1005.csv'
+archivo_5 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1006.csv'
+archivo_6 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1007.csv'
+archivo_7 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1008.csv'
+archivo_8 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1017.csv'
+archivo_9 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1020.csv'
+archivo_10 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1028.csv'
+archivo_11 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1030.csv'
+archivo_12 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1039.csv'
+archivo_13 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1040.csv'
+archivo_14 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1041.csv'
+archivo_15 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1042.csv'
+archivo_16 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1043.csv'
+archivo_17 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_1044.csv'
+archivo_18 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2007.csv'
+archivo_19 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2013.csv'
+archivo_20 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2036.csv'
+archivo_21 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2037.csv'
+archivo_22 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2071.csv'
+archivo_24 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2078.csv'
+archivo_25 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2080.csv'
+archivo_26 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_2081.csv'
+archivo_27 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0116_9001.csv'
+archivo_28 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1002.csv'
+archivo_29 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1003.csv'
+archivo_30 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1004.csv'
+archivo_31 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1005.csv'
+archivo_32 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1006.csv'
+archivo_33 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1007.csv'
+archivo_34 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1008.csv'
+archivo_35 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1017.csv'
+archivo_36 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1020.csv'
+archivo_37 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1028.csv'
+archivo_38 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1030.csv'
+archivo_39 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1039.csv'
+archivo_40 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1040.csv'
+archivo_41 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1041.csv'
+archivo_42 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1042.csv'
+archivo_43 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1043.csv'
+archivo_44 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_1044.csv'
+archivo_45 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2007.csv'
+archivo_46 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2013.csv'
+archivo_47 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2036.csv'
+archivo_48 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2037.csv'
+archivo_49 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2071.csv'
+archivo_51 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2078.csv'
+archivo_52 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2080.csv'
+archivo_53 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_2081.csv'
+archivo_54 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0216_9001.csv'
+archivo_55 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1002.csv'
+archivo_56 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1003.csv'
+archivo_57 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1004.csv'
+archivo_58 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1005.csv'
+archivo_59 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1006.csv'
+archivo_60 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1007.csv'
+archivo_61 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1008.csv'
+archivo_62 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1017.csv'
+archivo_63 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1020.csv'
+archivo_64 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1028.csv'
+archivo_65 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1030.csv'
+archivo_66 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1039.csv'
+archivo_67 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1040.csv'
+archivo_68 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1041.csv'
+archivo_69 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1042.csv'
+archivo_70 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1043.csv'
+archivo_71 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_1044.csv'
+archivo_72 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2007.csv'
+archivo_73 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2013.csv'
+archivo_74 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2036.csv'
+archivo_75 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2037.csv'
+archivo_76 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2071.csv'
+archivo_78 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2078.csv'
+archivo_79 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2080.csv'
+archivo_80 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_2081.csv'
+archivo_81 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0316_9001.csv'
+archivo_82 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1002.csv'
+archivo_83 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1003.csv'
+archivo_84 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1004.csv'
+archivo_85 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1005.csv'
+archivo_86 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1006.csv'
+archivo_87 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1007.csv'
+archivo_88 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1008.csv'
+archivo_89 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1017.csv'
+archivo_90 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1020.csv'
+archivo_91 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1028.csv'
+archivo_92 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1030.csv'
+archivo_93 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1039.csv'
+archivo_94 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1040.csv'
+archivo_95 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1041.csv'
+archivo_96 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1042.csv'
+archivo_97 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1043.csv'
+archivo_98 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_1044.csv'
+archivo_99 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2007.csv'
+archivo_100 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2013.csv'
+archivo_101 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2036.csv'
+archivo_102 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2037.csv'
+archivo_103 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2071.csv'
+archivo_105 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2078.csv'
+archivo_106 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2080.csv'
+archivo_107 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_2081.csv'
+archivo_108 = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\WB 4\2021\Créditos_WB_0416_9001.csv'
+
+
+dtype_dict = {'Numero Operacion': str, 'Numero Documento': str, 'Codigo Tipo Riesgo': str}
+
+
+
+# Cargar los archivos CSV en DataFrames
+df_1 = pd.read_csv(archivo_1, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_2 = pd.read_csv(archivo_2, delimiter=';', encoding='utf-8')
+df_3 = pd.read_csv(archivo_3, delimiter=';', encoding='utf-8')
+df_4 = pd.read_csv(archivo_4, delimiter=';', encoding='utf-8')
+df_5 = pd.read_csv(archivo_5, delimiter=';', encoding='utf-8')
+df_6 = pd.read_csv(archivo_6, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_7 = pd.read_csv(archivo_7, delimiter=';', encoding='utf-8')
+df_8 = pd.read_csv(archivo_8, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_9 = pd.read_csv(archivo_9, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_10 = pd.read_csv(archivo_10, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_11 = pd.read_csv(archivo_11, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_12 = pd.read_csv(archivo_12, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_13 = pd.read_csv(archivo_13, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_14 = pd.read_csv(archivo_14, delimiter=';', encoding='utf-8')
+df_15 = pd.read_csv(archivo_15, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_16 = pd.read_csv(archivo_16, delimiter=';', encoding='utf-8')
+df_17 = pd.read_csv(archivo_17, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_18 = pd.read_csv(archivo_18, delimiter=';', encoding='utf-8')
+df_19 = pd.read_csv(archivo_19, delimiter=';', encoding='utf-8')
+df_20 = pd.read_csv(archivo_20, delimiter=';', encoding='utf-8')
+df_21 = pd.read_csv(archivo_21, delimiter=';', encoding='utf-8')
+df_22 = pd.read_csv(archivo_22, delimiter=';', encoding='utf-8')
+df_24 = pd.read_csv(archivo_24, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_25 = pd.read_csv(archivo_25, delimiter=';', encoding='utf-8')
+df_26 = pd.read_csv(archivo_26, delimiter=';', encoding='utf-8')
+df_27 = pd.read_csv(archivo_27, delimiter=';', encoding='utf-8')
+df_28 = pd.read_csv(archivo_28, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_29 = pd.read_csv(archivo_29, delimiter=';', encoding='utf-8')
+df_30 = pd.read_csv(archivo_30, delimiter=';', encoding='utf-8')
+df_31 = pd.read_csv(archivo_31, delimiter=';', encoding='utf-8')
+df_32 = pd.read_csv(archivo_32, delimiter=';', encoding='utf-8')
+df_33 = pd.read_csv(archivo_33, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_34 = pd.read_csv(archivo_34, delimiter=';', encoding='utf-8')
+df_35 = pd.read_csv(archivo_35, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_36 = pd.read_csv(archivo_36, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_37 = pd.read_csv(archivo_37, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_38 = pd.read_csv(archivo_38, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_39 = pd.read_csv(archivo_39, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_40 = pd.read_csv(archivo_40, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_41 = pd.read_csv(archivo_41, delimiter=';', encoding='utf-8')
+df_42 = pd.read_csv(archivo_42, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_43 = pd.read_csv(archivo_43, delimiter=';', encoding='utf-8')
+df_44 = pd.read_csv(archivo_44, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_45 = pd.read_csv(archivo_45, delimiter=';', encoding='utf-8')
+df_46 = pd.read_csv(archivo_46, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_47 = pd.read_csv(archivo_47, delimiter=';', encoding='utf-8')
+df_48 = pd.read_csv(archivo_48, delimiter=';', encoding='utf-8')
+df_49 = pd.read_csv(archivo_49, delimiter=';', encoding='utf-8')
+df_51 = pd.read_csv(archivo_51, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_52 = pd.read_csv(archivo_52, delimiter=';', encoding='utf-8')
+df_53 = pd.read_csv(archivo_53, delimiter=';', encoding='utf-8')
+df_54 = pd.read_csv(archivo_54, delimiter=';', encoding='utf-8')
+df_55 = pd.read_csv(archivo_55, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_56 = pd.read_csv(archivo_56, delimiter=';', encoding='utf-8')
+df_57 = pd.read_csv(archivo_57, delimiter=';', encoding='utf-8')
+df_58 = pd.read_csv(archivo_58, delimiter=';', encoding='utf-8')
+df_59 = pd.read_csv(archivo_59, delimiter=';', encoding='utf-8')
+df_60 = pd.read_csv(archivo_60, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_61 = pd.read_csv(archivo_61, delimiter=';', encoding='utf-8')
+df_62 = pd.read_csv(archivo_62, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_63 = pd.read_csv(archivo_63, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_64 = pd.read_csv(archivo_64, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_65 = pd.read_csv(archivo_65, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_66 = pd.read_csv(archivo_66, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_67 = pd.read_csv(archivo_67, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_68 = pd.read_csv(archivo_68, delimiter=';', encoding='utf-8')
+df_69 = pd.read_csv(archivo_69, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_70 = pd.read_csv(archivo_70, delimiter=';', encoding='utf-8')
+df_71 = pd.read_csv(archivo_71, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_72 = pd.read_csv(archivo_72, delimiter=';', encoding='utf-8')
+df_73 = pd.read_csv(archivo_73, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_74 = pd.read_csv(archivo_74, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_75 = pd.read_csv(archivo_75, delimiter=';', encoding='utf-8')
+df_76 = pd.read_csv(archivo_76, delimiter=';', encoding='utf-8')
+df_78 = pd.read_csv(archivo_78, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_79 = pd.read_csv(archivo_79, delimiter=';', encoding='utf-8')
+df_80 = pd.read_csv(archivo_80, delimiter=';', encoding='utf-8')
+df_81 = pd.read_csv(archivo_81, delimiter=';', encoding='utf-8')
+df_82 = pd.read_csv(archivo_82, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_83 = pd.read_csv(archivo_83, delimiter=';', encoding='utf-8')
+df_84 = pd.read_csv(archivo_84, delimiter=';', encoding='utf-8')
+df_85 = pd.read_csv(archivo_85, delimiter=';', encoding='utf-8')
+df_86 = pd.read_csv(archivo_86, delimiter=';', encoding='utf-8')
+df_87 = pd.read_csv(archivo_87, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_88 = pd.read_csv(archivo_88, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_89 = pd.read_csv(archivo_89, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_90 = pd.read_csv(archivo_90, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_91 = pd.read_csv(archivo_91, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_92 = pd.read_csv(archivo_92, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_93 = pd.read_csv(archivo_93, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_94 = pd.read_csv(archivo_94, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_95 = pd.read_csv(archivo_95, delimiter=';', encoding='utf-8')
+df_96 = pd.read_csv(archivo_96, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_97 = pd.read_csv(archivo_97, delimiter=';', encoding='utf-8')
+df_98 = pd.read_csv(archivo_98, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_99 = pd.read_csv(archivo_99, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_100 = pd.read_csv(archivo_100, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_101 = pd.read_csv(archivo_101, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_102 = pd.read_csv(archivo_102, delimiter=';', encoding='utf-8')
+df_103 = pd.read_csv(archivo_103, delimiter=';', encoding='utf-8')
+df_105 = pd.read_csv(archivo_105, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_106 = pd.read_csv(archivo_106, delimiter=';', encoding='utf-8')
+df_107 = pd.read_csv(archivo_107, delimiter=';', encoding='utf-8', dtype=dtype_dict)
+df_108 = pd.read_csv(archivo_108, delimiter=';', encoding='utf-8')
+
+
+
+
+# Concatenar los DataFrames a lo largo del eje 0 (filas)
+df_concatenado = pd.concat([df_1, df_2, df_3, df_4, df_5, df_6, df_7, df_8, df_9, df_10, df_11, df_12, df_13, df_14, df_15, df_16, df_17, df_18, df_19, df_20, df_21, df_22, df_24, df_25, df_26, df_27, df_28, df_29, df_30, df_31, df_32, df_33, df_34, df_35, df_36, df_37, df_38, df_39, df_40, df_41, df_42, df_43, df_44, df_45, df_46, df_47, df_48, df_49, df_51, df_52, df_53, df_54, df_55, df_56, df_57, df_58, df_59, df_60, df_61, df_62, df_63, df_64, df_65, df_66, df_67, df_68, df_69, df_70, df_71, df_72, df_73, df_74, df_75, df_76, df_78, df_79, df_80, df_81, df_82, df_83, df_84, df_85, df_86, df_87, df_88, df_89, df_90, df_91, df_92, df_93, df_94, df_95, df_96, df_97, df_98, df_99, df_100, df_101, df_102, df_103, df_105, df_106, df_107, df_108], axis=0)
+
+ruta_salida_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2021_T1.csv'
+
+df_concatenado.to_csv(ruta_salida_csv, sep= ';', index=False)
+
+print(df_concatenado.shape)
+pd.set_option('display.max_columns', None)
+print(df_concatenado.head())
+entidades = df_concatenado['Codigo Entidad'].unique()
+print(entidades)
+monedas = df_concatenado['Id Moneda'].unique()
+print(monedas)
+tipo_op = df_concatenado['Codigo Tipo Operacion'].unique()
+print(tipo_op)
