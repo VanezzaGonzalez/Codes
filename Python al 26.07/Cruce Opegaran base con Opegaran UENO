@@ -35,3 +35,5 @@ print(unique_in_ueno)
 common_operations.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Ueno_opegaran_comunes.csv', index=False, sep=';')
 unique_in_base.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Ueno_opegaran_unicas_en_base.csv', index=False, sep=';')
 unique_in_ueno.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2081\9 tanda\Ueno_opegaran_unicas_en_ueno.csv', index=False, sep=';')
+
+
