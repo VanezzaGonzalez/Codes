@@ -33,3 +33,4 @@ print(resultados_df)
 
 # Guardar los resultados en un nuevo archivo CSV
 resultados_df.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\resultados_clasifica.csv', index=False, sep=';')
+
