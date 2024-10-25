@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
-df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';', dtype={'Id Region': str}, low_memory=False)
-df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\OperacionesModifv2_part2.csv', sep=';', dtype={'Id Region': str}, low_memory=False)
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Operaciones_Ueno_BI.csv', sep=';')
 
 df1['Id Region'] = df1['Id Region'].astype(str).str.strip()
 df2['Id Region'] = df2['Id Region'].astype(str).str.strip()
@@ -20,4 +20,4 @@ pd.set_option('display.max_columns', None)
 print(diferencias_id_region)
 
 # Exportar a CSV
-diferencias_id_region.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_Id_Region.csv', index=False, sep=';')
+diferencias_id_region.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Diferencias_Id_Region.csv', index=False, sep=';')
