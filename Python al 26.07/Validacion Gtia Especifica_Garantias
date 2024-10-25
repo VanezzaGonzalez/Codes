@@ -51,3 +51,4 @@ print(diferencias_gtia_especifica)
 
 # Exportar el DataFrame a un archivo CSV
 diferencias_gtia_especifica.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\diferencias_gtia_especifica.csv', index=False, sep=';')
+
