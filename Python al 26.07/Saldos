@@ -2,8 +2,8 @@ import csv
 import pandas as pd
 
 # Ruta del archivo de texto y el archivo CSV de salida
-archivo_txt = r"C:\Users\fgonzalez\Downloads\877289_CRC03-1043-20240331.txt"
-archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos.csv'
+archivo_txt = r'C:\Users\fgonzalez\Downloads\926555_CRC03-1047-20240930 (1).txt'
+archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos_Consolidado2_Consolidado.csv'
 archivo_csv_agrupado = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\_Saldos2_agrupado.csv'
 
 # Función para insertar punto y coma en posiciones específicas en una cadena
@@ -73,3 +73,4 @@ df_agrupado.to_csv(archivo_csv_agrupado, index=False, sep=';')
 
 # Verificar el DataFrame agrupado
 print(df_agrupado.head())
+
