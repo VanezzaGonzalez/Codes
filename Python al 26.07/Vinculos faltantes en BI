@@ -10,3 +10,4 @@ pd.set_option('display.max_columns', None)
 print(only_in_left)
 
 only_in_left.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\19 tanda\Vinculos_Solo_BI.csv', index=False, sep=';')
+
