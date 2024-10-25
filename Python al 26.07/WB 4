@@ -1,0 +1,69 @@
+import pandas as pd
+import hashlib
+
+# Ruta del archivo CSV
+ruta_archivo_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2023_T1.csv'
+
+dtype_dict = {'Numero Operacion': str, 'Numero Documento': str, 'Codigo Tipo Riesgo': str}
+
+# Importar el archivo CSV especificando el delimitador como ';'
+data = pd.read_csv(ruta_archivo_csv, delimiter=';',  dtype=dtype_dict)
+
+# Crear una copia del DataFrame para evitar modificar los valores originales
+data_copy = data.copy()
+
+# Convertir la columna 'Fecha Nacimiento' al formato de fecha
+data_copy['Fecha Nacimiento'] = pd.to_datetime(data_copy['Fecha Nacimiento'], errors='coerce')
+
+# Extraer el año de la fecha de nacimiento y asignarlo a la columna
+data_copy['Fecha Nacimiento'] = data_copy['Fecha Nacimiento'].dt.year.astype('Int32')
+
+# Función para clasificar los datos según la columna 'Codigo Cuenta Editado' y 'Cuenta'
+def clasificar_codigo_cuenta(row):
+    if row['Cuenta'] == 417:
+        return 'Ren'
+    elif row['Codigo Cuenta Editado'] == 14010169004:
+        return 'Ren'
+    elif row['Codigo Cuenta Editado'] == 14010173006:
+        return 'Ren'
+    elif row['Codigo Cuenta Editado'] == 14010173008:
+        return 'Ref'
+    elif row['Codigo Cuenta Editado'] == 14010169006:
+        return 'Ref'
+    elif row['Codigo Cuenta Editado'] == 14010169008:
+        return 'Ree'
+    elif row['Codigo Cuenta Editado'] == 14010173010:
+        return 'Ree'
+    else:
+        return 'n/a'
+
+# Aplicar la función de clasificación y crear una nueva columna llamada 'Clasificacion'
+data_copy['Clasificacion'] = data_copy.apply(clasificar_codigo_cuenta, axis=1)
+
+# Función para generar un hash SHA-256 de la columna 'Numero Operacion' y tomar los primeros 8 caracteres
+def generar_hash(numero_operacion):
+    return hashlib.sha256(str(numero_operacion).encode()).hexdigest()[:12]
+
+# Aplicar la función de generación de hash y crear una nueva columna llamada 'Hash_Numero_Operacion'
+data_copy['Hash_Numero_Operacion'] = data_copy['Numero Operacion'].apply(generar_hash)
+
+# Función para generar un hash SHA-256 de la columna 'Numero Documento' y tomar los primeros 8 caracteres
+def generar_hash_documento(numero_documento):
+    return hashlib.sha256(str(numero_documento).encode()).hexdigest()[:12]
+
+# Aplicar la función de generación de hash y crear una nueva columna llamada 'Hash_Numero_Documento'
+data_copy['Hash_Numero_Documento'] = data_copy['Numero Documento'].apply(generar_hash_documento)
+
+# Crear un nuevo DataFrame excluyendo las columnas 'Numero Operacion' y 'Codigo Cuenta Editado'
+nuevo_dataframe = data_copy.drop(['Numero Operacion', 'Numero Documento', 'Año Mes Operacion'], axis=1)
+
+pd.set_option('display.max_columns', None)
+print(nuevo_dataframe.head(80))
+
+print(data_copy.info(memory_usage='deep'))
+
+# Ruta de salida para el nuevo archivo CSV
+ruta_salida_csv = r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\2023_H1.csv'
+
+# Exportar el nuevo DataFrame a un archivo CSV
+nuevo_dataframe.to_csv(ruta_salida_csv, sep=';', index=False)
