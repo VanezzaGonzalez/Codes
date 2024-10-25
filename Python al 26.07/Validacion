@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Cargar los archivos CSV en dos DataFrames
-df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';')
-df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\OperacionesModifv2_part2.csv', sep=';')
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Operaciones_Ueno_BI.csv', sep=';')
 
 # Reemplazar comas por puntos en la columna 'Cuota Pactada'
 df2['Cuota Pactada'] = df2['Cuota Pactada'].str.replace(',', '.').astype('float64').astype('int64')
@@ -50,4 +50,4 @@ rows_not_in_df2 = df1[~df1['Llave Concatenada'].isin(df2['Llave Concatenada'])]
 print("Filas en Archivo UENO que no están presentes en BI:")
 print(rows_not_in_df2)
 
-rows_not_in_df2.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Opes_Ueno_NO_BIv2.csv', index=False, sep=';')
+rows_not_in_df2.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Opes_Ueno_NO_BIv2.csv', index=False, sep=';')
