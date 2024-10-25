@@ -122,3 +122,4 @@ df_detallado = df_detallado.groupby(['Cuenta + SubCuenta', 'Cuenta + SubCuenta I
 print("\nDataFrame Resultante Detallado:")
 print(df_detallado)
 df_detallado.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\detallado.csv', index=False, sep=';')
+
