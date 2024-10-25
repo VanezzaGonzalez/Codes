@@ -17,3 +17,4 @@ print(diferencias_tipodoc)
 
 # Exportar resultados a CSV
 diferencias_tipodoc.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\9 tanda\Diferencias_tipodoc_vinculos.csv', index=False, sep=';')
+
