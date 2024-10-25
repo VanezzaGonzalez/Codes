@@ -1,8 +1,8 @@
 import pandas as pd
 
 # Suponiendo que tienes dos DataFrames df1 y df2, y una columna llamada 'Llave Concatenada' en ambos DataFrames
-df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\OperacionesModifv2_part2.csv', sep=';')
-df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Operaciones_Ueno_BI.csv', sep=';')
+df2 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\OperacionesModifv2_part2.csv', sep=';')
+df1 = pd.read_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Operaciones_Ueno_BI.csv', sep=';')
 
 # Encuentra las filas donde 'Fecha Operacion' es diferente basado en 'Llave Concatenada'
 merged = df1.merge(df2, on='Llave Concatenada', suffixes=('_df1', '_df2'))
@@ -17,4 +17,4 @@ pd.set_option('display.max_columns', None)
 print(diferencias_fecha_op)
 
 # Exportar resultados a CSV
-diferencias_fecha_op.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\18 tanda\Diferencias_fecha_op.csv', index=False, sep=';')
+diferencias_fecha_op.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Fusion_1046\20 tanda\Diferencias_fecha_op.csv', index=False, sep=';')
