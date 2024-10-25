@@ -29,3 +29,4 @@ print(diferencias_montoint)
 
 # Exportar a CSV
 diferencias_montoint.to_csv(r'E:\Usuarios\fgonzalez\OneDrive - bcp.gov.py\Escritorio\Vane\Migracion_2007\13 tanda\Diferencias_montoint.csv', index=False, sep=';')
+
